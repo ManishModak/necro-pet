@@ -37,13 +37,13 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
   };
 
   return (
-    <div className="flex flex-col h-full bg-gameboy-green border-2 border-ghostly-blue">
+    <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green">
       {/* The crypt keeper's header */}
-      <div className="px-3 py-2 border-b-2 border-ghostly-blue bg-black bg-opacity-30">
-        <h2 className="text-ghostly-blue text-sm font-bold pixelated">
+      <div className="px-3 py-2 border-b-2 border-terminal-green bg-panel-bg">
+        <h2 className="text-terminal-green text-sm font-bold pixelated">
           📜 SPIRIT ACTIVITY LOG 📜
         </h2>
-        <p className="text-ghostly-blue text-xs opacity-75 pixelated">
+        <p className="text-terminal-green text-xs pixelated">
           {entries.length} souls recorded
         </p>
       </div>
@@ -55,14 +55,14 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
         style={{ scrollBehavior: 'smooth' }}
       >
         {entries.length === 0 ? (
-          <div className="text-ghostly-blue text-xs opacity-50 text-center py-8">
+          <div className="text-terminal-green text-xs text-center py-8">
             The crypt is silent... awaiting disturbances...
           </div>
         ) : (
           entries.map((entry) => (
             <div
               key={entry.id}
-              className="bg-black bg-opacity-20 border border-ghostly-blue border-opacity-30 p-2 hover:border-opacity-60 transition-all"
+              className="bg-panel-bg border border-terminal-green border-opacity-50 p-2 hover:border-opacity-100 transition-all"
             >
               <div className="flex items-start gap-2">
                 <span className="text-base flex-shrink-0">
@@ -73,11 +73,11 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
                     <span className="text-blood-red text-xs font-bold">
                       {getEventLabel(entry.type)}
                     </span>
-                    <span className="text-ghostly-blue text-xs opacity-60">
+                    <span className="text-terminal-green text-xs">
                       {formatTimestamp(entry.timestamp)}
                     </span>
                   </div>
-                  <div className="text-ghostly-blue text-xs break-all">
+                  <div className="text-terminal-green text-xs break-all">
                     {entry.path}
                   </div>
                 </div>
@@ -88,8 +88,8 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
       </div>
 
       {/* The bottom border of the crypt */}
-      <div className="px-3 py-1 border-t-2 border-ghostly-blue bg-black bg-opacity-30">
-        <p className="text-ghostly-blue text-xs opacity-50 pixelated text-center">
+      <div className="px-3 py-1 border-t-2 border-terminal-green bg-panel-bg">
+        <p className="text-terminal-green text-xs pixelated text-center">
           {entries.length >= maxEntries
             ? '⚠️ Crypt at capacity - oldest spirits will be exorcised'
             : 'Monitoring the veil between worlds...'}

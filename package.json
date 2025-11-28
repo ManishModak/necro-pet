@@ -2,7 +2,7 @@
   "name": "necro-pet",
   "version": "1.0.0",
   "description": "A haunted desktop pet that feeds on your coding activity",
-  "main": "dist-electron/main/index.js",
+  "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/ManishModak/necro-pet#readme",
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^24.10.1",

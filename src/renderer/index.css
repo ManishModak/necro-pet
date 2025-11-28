@@ -1,15 +1,22 @@
 /* Awakening the ancient styles from the crypt... */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* The haunted palette summoned via dark CSS rituals */
+@theme {
+  --color-gameboy-green: #0a2a0a;
+  --color-crypt-dark: #0d1a0d;
+  --color-blood-red: #ff4444;
+  --color-ghostly-blue: #b0ffff;
+  --color-ghostly-bright: #ffffff;
+  --color-terminal-green: #00ff41;
+  --color-panel-bg: #0a1f0a;
+}
 
 /* Pixel-art rendering incantation */
-@layer utilities {
-  .pixelated {
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
+@utility pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 /* Base haunted house aesthetic */
@@ -20,7 +27,7 @@
     image-rendering: pixelated;
   }
   
-  /* Scanline effect for that retro CRT vibe */
+  /* Scanline effect for that retro CRT vibe - lighter for better visibility */
   body::before {
     content: '';
     position: fixed;
@@ -31,8 +38,8 @@
     pointer-events: none;
     background: repeating-linear-gradient(
       0deg,
-      rgba(0, 0, 0, 0.15),
-      rgba(0, 0, 0, 0.15) 1px,
+      rgba(0, 0, 0, 0.08),
+      rgba(0, 0, 0, 0.08) 1px,
       transparent 1px,
       transparent 2px
     );

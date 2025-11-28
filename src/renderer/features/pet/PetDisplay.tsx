@@ -61,18 +61,18 @@ const useNecroStyles = () => {
 const EggSvg: React.FC<{ mood: Mood }> = ({ mood }) => (
   <svg width="64" height="64" viewBox="0 0 16 16" className="pixelated">
     {/* The shell of dormant life */}
-    <rect x="5" y="2" width="6" height="2" fill="#0f380f" />
-    <rect x="4" y="4" width="8" height="2" fill="#0f380f" />
-    <rect x="3" y="6" width="10" height="4" fill="#0f380f" />
-    <rect x="4" y="10" width="8" height="2" fill="#0f380f" />
-    <rect x="5" y="12" width="6" height="2" fill="#0f380f" />
+    <rect x="5" y="2" width="6" height="2" fill="#00ff41" />
+    <rect x="4" y="4" width="8" height="2" fill="#00ff41" />
+    <rect x="3" y="6" width="10" height="4" fill="#00ff41" />
+    <rect x="4" y="10" width="8" height="2" fill="#00ff41" />
+    <rect x="5" y="12" width="6" height="2" fill="#00ff41" />
     {/* The cracks - signs of awakening */}
-    <rect x="6" y="3" width="1" height="3" fill="#081820" className={mood === Mood.HUNGRY ? 'animate-pulse' : ''} />
-    <rect x="7" y="5" width="2" height="1" fill="#081820" />
-    <rect x="9" y="6" width="1" height="4" fill="#081820" className={mood === Mood.HUNGRY ? 'animate-pulse' : ''} />
-    <rect x="8" y="9" width="1" height="1" fill="#081820" />
+    <rect x="6" y="3" width="1" height="3" fill="#003311" className={mood === Mood.HUNGRY ? 'animate-pulse' : ''} />
+    <rect x="7" y="5" width="2" height="1" fill="#003311" />
+    <rect x="9" y="6" width="1" height="4" fill="#003311" className={mood === Mood.HUNGRY ? 'animate-pulse' : ''} />
+    <rect x="8" y="9" width="1" height="1" fill="#003311" />
     {/* Inner glow - the spark of unlife */}
-    <rect x="6" y="7" width="2" height="2" fill="#0f380f" className="animate-pulse opacity-75" />
+    <rect x="6" y="7" width="2" height="2" fill="#00ff88" className="animate-pulse" />
   </svg>
 );
 
@@ -80,25 +80,25 @@ const EggSvg: React.FC<{ mood: Mood }> = ({ mood }) => (
 const LarvaSvg: React.FC<{ mood: Mood }> = ({ mood }) => (
   <svg width="64" height="64" viewBox="0 0 16 16" className="pixelated">
     {/* The segmented body of corruption */}
-    <rect x="2" y="8" width="3" height="3" fill="#0f380f" />
-    <rect x="4" y="7" width="3" height="4" fill="#0f380f" />
-    <rect x="6" y="6" width="4" height="5" fill="#0f380f" />
-    <rect x="9" y="5" width="4" height="6" fill="#0f380f" />
+    <rect x="2" y="8" width="3" height="3" fill="#00dd33" />
+    <rect x="4" y="7" width="3" height="4" fill="#00ee44" />
+    <rect x="6" y="6" width="4" height="5" fill="#00ff41" />
+    <rect x="9" y="5" width="4" height="6" fill="#00ff55" />
     {/* The cursed eye */}
-    <rect x="11" y="7" width="2" height="2" fill="#081820" />
-    <rect x="12" y="7" width="1" height="1" fill="#0f380f" className={mood === Mood.HUNGRY ? 'animate-ping' : 'animate-pulse'} />
+    <rect x="11" y="7" width="2" height="2" fill="#003311" />
+    <rect x="12" y="7" width="1" height="1" fill="#ff4444" className={mood === Mood.HUNGRY ? 'animate-ping' : 'animate-pulse'} />
     {/* Antennae - sensing the void */}
-    <rect x="12" y="3" width="1" height="2" fill="#0f380f" />
-    <rect x="13" y="2" width="1" height="2" fill="#0f380f" />
-    <rect x="14" y="4" width="1" height="2" fill="#0f380f" />
+    <rect x="12" y="3" width="1" height="2" fill="#00ff41" />
+    <rect x="13" y="2" width="1" height="2" fill="#00ff41" />
+    <rect x="14" y="4" width="1" height="2" fill="#00ff41" />
     {/* Legs - skittering through shadows */}
-    <rect x="3" y="11" width="1" height="2" fill="#081820" />
-    <rect x="5" y="11" width="1" height="3" fill="#081820" />
-    <rect x="7" y="11" width="1" height="2" fill="#081820" />
-    <rect x="9" y="11" width="1" height="3" fill="#081820" />
+    <rect x="3" y="11" width="1" height="2" fill="#006622" />
+    <rect x="5" y="11" width="1" height="3" fill="#006622" />
+    <rect x="7" y="11" width="1" height="2" fill="#006622" />
+    <rect x="9" y="11" width="1" height="3" fill="#006622" />
     {/* Glitch artifacts */}
-    <rect x="1" y="9" width="1" height="1" fill="#081820" className="animate-pulse" />
-    <rect x="14" y="8" width="1" height="1" fill="#081820" className="animate-pulse" />
+    <rect x="1" y="9" width="1" height="1" fill="#00ff41" className="animate-pulse" />
+    <rect x="14" y="8" width="1" height="1" fill="#00ff41" className="animate-pulse" />
   </svg>
 );
 
@@ -106,30 +106,30 @@ const LarvaSvg: React.FC<{ mood: Mood }> = ({ mood }) => (
 const BeastSvg: React.FC<{ mood: Mood }> = ({ mood }) => (
   <svg width="64" height="64" viewBox="0 0 16 16" className="pixelated">
     {/* The skull frame */}
-    <rect x="2" y="2" width="12" height="2" fill="#0f380f" />
-    <rect x="1" y="4" width="14" height="8" fill="#0f380f" />
-    <rect x="2" y="12" width="12" height="2" fill="#0f380f" />
+    <rect x="2" y="2" width="12" height="2" fill="#00ff41" />
+    <rect x="1" y="4" width="14" height="8" fill="#00ff41" />
+    <rect x="2" y="12" width="12" height="2" fill="#00ff41" />
     {/* The hollow eye sockets */}
-    <rect x="3" y="5" width="4" height="3" fill="#081820" />
-    <rect x="9" y="5" width="4" height="3" fill="#081820" />
+    <rect x="3" y="5" width="4" height="3" fill="#001a00" />
+    <rect x="9" y="5" width="4" height="3" fill="#001a00" />
     {/* The burning pupils */}
-    <rect x="4" y="6" width="2" height="2" fill="#0f380f" className={mood === Mood.HUNGRY ? 'animate-ping' : 'animate-pulse'} />
-    <rect x="10" y="6" width="2" height="2" fill="#0f380f" className={mood === Mood.HUNGRY ? 'animate-ping' : 'animate-pulse'} />
+    <rect x="4" y="6" width="2" height="2" fill="#ff4444" className={mood === Mood.HUNGRY ? 'animate-ping' : 'animate-pulse'} />
+    <rect x="10" y="6" width="2" height="2" fill="#ff4444" className={mood === Mood.HUNGRY ? 'animate-ping' : 'animate-pulse'} />
     {/* The nose cavity */}
-    <rect x="7" y="8" width="2" height="2" fill="#081820" />
+    <rect x="7" y="8" width="2" height="2" fill="#001a00" />
     {/* The jagged maw */}
-    <rect x="4" y="10" width="8" height="2" fill="#081820" />
-    <rect x="5" y="10" width="1" height="1" fill="#0f380f" />
-    <rect x="7" y="10" width="1" height="1" fill="#0f380f" />
-    <rect x="9" y="10" width="1" height="1" fill="#0f380f" />
-    <rect x="6" y="11" width="1" height="1" fill="#0f380f" />
-    <rect x="8" y="11" width="1" height="1" fill="#0f380f" />
-    <rect x="10" y="11" width="1" height="1" fill="#0f380f" />
+    <rect x="4" y="10" width="8" height="2" fill="#001a00" />
+    <rect x="5" y="10" width="1" height="1" fill="#00ff41" />
+    <rect x="7" y="10" width="1" height="1" fill="#00ff41" />
+    <rect x="9" y="10" width="1" height="1" fill="#00ff41" />
+    <rect x="6" y="11" width="1" height="1" fill="#00ff41" />
+    <rect x="8" y="11" width="1" height="1" fill="#00ff41" />
+    <rect x="10" y="11" width="1" height="1" fill="#00ff41" />
     {/* Horns of power */}
-    <rect x="1" y="1" width="2" height="2" fill="#081820" />
-    <rect x="13" y="1" width="2" height="2" fill="#081820" />
-    <rect x="0" y="0" width="1" height="2" fill="#0f380f" />
-    <rect x="15" y="0" width="1" height="2" fill="#0f380f" />
+    <rect x="1" y="1" width="2" height="2" fill="#ff4444" />
+    <rect x="13" y="1" width="2" height="2" fill="#ff4444" />
+    <rect x="0" y="0" width="1" height="2" fill="#00ff41" />
+    <rect x="15" y="0" width="1" height="2" fill="#00ff41" />
   </svg>
 );
 
@@ -137,23 +137,23 @@ const BeastSvg: React.FC<{ mood: Mood }> = ({ mood }) => (
 const GhostSvg: React.FC = () => (
   <svg width="64" height="64" viewBox="0 0 16 16" className="pixelated animate-bounce">
     {/* The ethereal skull */}
-    <rect x="4" y="1" width="8" height="2" fill="#0f380f" className="opacity-75" />
-    <rect x="3" y="3" width="10" height="6" fill="#0f380f" className="opacity-75" />
-    <rect x="4" y="9" width="8" height="2" fill="#0f380f" className="opacity-75" />
+    <rect x="4" y="1" width="8" height="2" fill="#00ff41" opacity="0.6" />
+    <rect x="3" y="3" width="10" height="6" fill="#00ff41" opacity="0.6" />
+    <rect x="4" y="9" width="8" height="2" fill="#00ff41" opacity="0.6" />
     {/* Empty eye sockets - windows to the void */}
-    <rect x="4" y="4" width="3" height="3" fill="#081820" />
-    <rect x="9" y="4" width="3" height="3" fill="#081820" />
+    <rect x="4" y="4" width="3" height="3" fill="#001a00" />
+    <rect x="9" y="4" width="3" height="3" fill="#001a00" />
     {/* Fading pupils */}
-    <rect x="5" y="5" width="1" height="1" fill="#0f380f" className="animate-pulse opacity-50" />
-    <rect x="10" y="5" width="1" height="1" fill="#0f380f" className="animate-pulse opacity-50" />
+    <rect x="5" y="5" width="1" height="1" fill="#ff4444" className="animate-pulse" opacity="0.8" />
+    <rect x="10" y="5" width="1" height="1" fill="#ff4444" className="animate-pulse" opacity="0.8" />
     {/* The silent scream */}
-    <rect x="6" y="8" width="4" height="2" fill="#081820" />
+    <rect x="6" y="8" width="4" height="2" fill="#001a00" />
     {/* Spectral wisps - fading into nothing */}
-    <rect x="5" y="11" width="2" height="2" fill="#0f380f" className="opacity-50 animate-pulse" />
-    <rect x="9" y="11" width="2" height="2" fill="#0f380f" className="opacity-50 animate-pulse" />
-    <rect x="6" y="13" width="1" height="2" fill="#0f380f" className="opacity-25 animate-pulse" />
-    <rect x="9" y="13" width="1" height="2" fill="#0f380f" className="opacity-25 animate-pulse" />
-    <rect x="7" y="14" width="2" height="1" fill="#0f380f" className="opacity-25" />
+    <rect x="5" y="11" width="2" height="2" fill="#00ff41" className="animate-pulse" opacity="0.4" />
+    <rect x="9" y="11" width="2" height="2" fill="#00ff41" className="animate-pulse" opacity="0.4" />
+    <rect x="6" y="13" width="1" height="2" fill="#00ff41" className="animate-pulse" opacity="0.25" />
+    <rect x="9" y="13" width="1" height="2" fill="#00ff41" className="animate-pulse" opacity="0.25" />
+    <rect x="7" y="14" width="2" height="1" fill="#00ff41" opacity="0.2" />
   </svg>
 );
 
@@ -256,13 +256,13 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gameboy-green border-2 border-ghostly-blue">
+    <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green">
       {/* The crypt keeper's header */}
-      <div className="px-3 py-2 border-b-2 border-ghostly-blue bg-black bg-opacity-30">
-        <h2 className="text-ghostly-blue text-sm font-bold pixelated">
+      <div className="px-3 py-2 border-b-2 border-terminal-green bg-panel-bg">
+        <h2 className="text-terminal-green text-sm font-bold pixelated">
           💀 NECRO-PET STATUS 💀
         </h2>
-        <p className="text-ghostly-blue text-xs opacity-75 pixelated">
+        <p className="text-terminal-green text-xs pixelated">
           Stage: {stageName}
         </p>
       </div>
@@ -278,7 +278,7 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
         </div>
 
         {/* The mood whisper */}
-        <div className="text-ghostly-blue text-xs text-center opacity-75 pixelated">
+        <div className="text-terminal-green text-xs text-center pixelated">
           {moodDesc}
         </div>
 
@@ -287,14 +287,14 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
           {/* Health bar - the life force */}
           <div className="space-y-1">
             <div className="flex justify-between items-center">
-              <span className="text-ghostly-blue text-xs font-bold pixelated">
+              <span className="text-terminal-green text-xs font-bold pixelated">
                 ❤️ HEALTH
               </span>
-              <span className="text-ghostly-blue text-xs pixelated">
+              <span className="text-terminal-green text-xs pixelated">
                 {health}/100
               </span>
             </div>
-            <div className="w-full h-4 bg-black bg-opacity-40 border border-ghostly-blue border-opacity-50">
+            <div className="w-full h-4 bg-panel-bg border border-terminal-green">
               <div
                 className={`h-full ${getHealthColor()} transition-all duration-300`}
                 style={{ width: `${health}%` }}
@@ -305,15 +305,15 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
           {/* XP bar - the accumulated essence */}
           <div className="space-y-1">
             <div className="flex justify-between items-center">
-              <span className="text-ghostly-blue text-xs font-bold pixelated">
+              <span className="text-terminal-green text-xs font-bold pixelated">
                 ✨ ESSENCE (XP)
               </span>
-              <span className="text-ghostly-blue text-xs pixelated">
+              <span className="text-terminal-green text-xs pixelated">
                 {xp}
               </span>
             </div>
-            <div className="w-full px-2 py-1 bg-black bg-opacity-40 border border-ghostly-blue border-opacity-50">
-              <div className="text-ghostly-blue text-xs text-center pixelated">
+            <div className="w-full px-2 py-1 bg-panel-bg border border-terminal-green">
+              <div className="text-terminal-green text-xs text-center pixelated">
                 {xp <= 10 ? 'Embryonic' : xp <= 50 ? 'Growing' : 'Ascended'}
               </div>
             </div>
@@ -322,8 +322,8 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
       </div>
 
       {/* The bottom whisper */}
-      <div className="px-3 py-1 border-t-2 border-ghostly-blue bg-black bg-opacity-30">
-        <p className="text-ghostly-blue text-xs opacity-50 pixelated text-center">
+      <div className="px-3 py-1 border-t-2 border-terminal-green bg-panel-bg">
+        <p className="text-terminal-green text-xs pixelated text-center">
           {stage === Stage.GHOST
             ? '💀 Your companion has perished... 💀'
             : '🕯️ Feed it with your code... 🕯️'}

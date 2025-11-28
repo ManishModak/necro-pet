@@ -15,6 +15,15 @@ export default defineConfig({
       {
         // Preload script - The Bridge between realms
         entry: 'src/preload/index.ts',
+        vite: {
+          build: {
+            rollupOptions: {
+              output: {
+                entryFileNames: 'preload.js',
+              },
+            },
+          },
+        },
         onstart(options) {
           // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete
           options.reload();

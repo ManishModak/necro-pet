@@ -46,15 +46,15 @@ function App() {
   };
 
   return (
-    <div className="w-full h-screen bg-transparent flex flex-col">
+    <div className="w-full h-screen bg-crypt-dark flex flex-col">
       {/* The haunted window chrome - draggable region */}
       <div
-        className="w-full bg-black bg-opacity-80 border-b-2 border-ghostly-blue flex items-center justify-between px-3 py-2 pixelated"
+        className="w-full bg-panel-bg border-b-2 border-terminal-green flex items-center justify-between px-3 py-2 pixelated"
         style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
       >
         <div className="flex items-center gap-2">
           <span className="text-blood-red text-lg">💀</span>
-          <h1 className="text-ghostly-blue text-sm font-bold">
+          <h1 className="text-terminal-green text-sm font-bold">
             NECRO-PET: CRYPT WATCHER
           </h1>
         </div>
@@ -62,7 +62,7 @@ function App() {
         {/* Close button - must be non-draggable */}
         <button
           onClick={handleClose}
-          className="text-blood-red hover:text-ghostly-blue transition-colors text-lg leading-none"
+          className="text-blood-red hover:text-terminal-green transition-colors text-lg leading-none"
           style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
           title="Banish to the void"
         >
@@ -73,7 +73,7 @@ function App() {
       {/* The main séance chamber - split between Pet and Activity Log */}
       <div className="flex-1 overflow-hidden flex">
         {/* The Pet's Resurrection Chamber */}
-        <div className="w-1/3 border-r-2 border-ghostly-blue bg-black bg-opacity-60 relative">
+        <div className="w-1/3 border-r-2 border-terminal-green bg-crypt-dark relative">
           <PetDisplay />
           <WeatherOverlay />
         </div>
@@ -85,8 +85,8 @@ function App() {
       </div>
 
       {/* The haunted footer */}
-      <div className="w-full bg-black bg-opacity-80 border-t-2 border-ghostly-blue px-3 py-1 pixelated">
-        <p className="text-ghostly-blue text-xs opacity-60 text-center">
+      <div className="w-full bg-panel-bg border-t-2 border-terminal-green px-3 py-1 pixelated">
+        <p className="text-terminal-green text-xs text-center">
           🕯️ Watching the veil between worlds... 🕯️
         </p>
       </div>

@@ -28,7 +28,7 @@ export const createMainWindow = (): BrowserWindow => {
   const mainWindow = new BrowserWindow({
     ...config,
     webPreferences: {
-      preload: path.join(__dirname, '../preload/index.js'),
+      preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },
