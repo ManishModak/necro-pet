@@ -282,15 +282,18 @@ describe('Game Loop Property Tests', () => {
         // Generate low initial health that will lead to death
         fc.integer({ min: 1, max: 10 }),
         (initialHealth) => {
+          // Reset store and mocks before each iteration
+          usePetStore.getState().reset();
+          vi.clearAllMocks();
+          
           const store = usePetStore.getState();
-          store.reset();
           
           // Set low health
           store.decreaseHealth(100 - initialHealth);
           
           // Render the hook
           const decayIntervalMs = 100;
-          renderHook(() => 
+          const { unmount } = renderHook(() => 
             useGameLoop({ 
               decayIntervalMs,
               decayAmount: 1
@@ -303,6 +306,9 @@ describe('Game Loop Property Tests', () => {
           });
           
           const finalState = usePetStore.getState();
+          
+          // Cleanup to prevent timer leaks
+          unmount();
           
           // Property: When health reaches 0, pet should be dead (GHOST stage, DEAD mood)
           expect(finalState.health).toBe(0);

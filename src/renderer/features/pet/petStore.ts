@@ -1,5 +1,6 @@
 // Summoning the Pet Store from the digital void...
 import { create } from 'zustand';
+import { WeatherState } from '../../services/weatherService';
 
 // Stage enum - The evolutionary forms of our undead companion
 export const Stage = {
@@ -26,12 +27,24 @@ export interface PetState {
   mood: Mood;          // Current emotional state
 }
 
+// The world context - environmental forces affecting our creature
+export interface WorldContextState {
+  weather: WeatherState;  // The atmospheric conditions
+  isNight: boolean;       // Whether darkness has fallen
+}
+
 // Actions to manipulate the pet's existence
 export interface PetActions {
   decreaseHealth: (amount: number) => void;
   increaseHealth: (amount: number) => void;
   increaseXP: (amount: number) => void;
   reset: () => void;
+}
+
+// Actions to manipulate the world context
+export interface WorldContextActions {
+  setWeather: (weather: WeatherState) => void;
+  setIsNight: (isNight: boolean) => void;
 }
 
 // Pure function: Clamp health to the mortal bounds [0, 100]
@@ -69,12 +82,16 @@ export const calculateMood = (health: number): Mood => {
 };
 
 // The Zustand store - the heart of our necromantic creation
-export const usePetStore = create<PetState & PetActions>((set) => ({
+export const usePetStore = create<PetState & WorldContextState & PetActions & WorldContextActions>((set) => ({
   // Initial state - a freshly summoned creature
   health: 100,
   xp: 0,
   stage: Stage.EGG,
   mood: Mood.HAPPY,
+  
+  // Initial world context - clear skies and daylight
+  weather: 'CLEAR',
+  isNight: false,
 
   // Decrease health - the decay of life
   decreaseHealth: (amount: number) => set((state) => {
@@ -110,6 +127,14 @@ export const usePetStore = create<PetState & PetActions>((set) => ({
     health: 100,
     xp: 0,
     stage: Stage.EGG,
-    mood: Mood.HAPPY
-  })
+    mood: Mood.HAPPY,
+    weather: 'CLEAR',
+    isNight: false
+  }),
+  
+  // Set weather - change the atmospheric conditions
+  setWeather: (weather: WeatherState) => set({ weather }),
+  
+  // Set night mode - toggle between day and night
+  setIsNight: (isNight: boolean) => set({ isNight })
 }));

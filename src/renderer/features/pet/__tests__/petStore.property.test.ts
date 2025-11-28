@@ -3,6 +3,8 @@
 // **Feature: pet-state-evolution, Property 3: Stage Derivation from XP**
 // **Feature: pet-state-evolution, Property 4: Death Overrides Stage**
 // **Feature: pet-state-evolution, Property 5: Mood Derivation from Health**
+// **Feature: world-context-weather-time, Property 3: Store Weather Update Consistency**
+// **Feature: world-context-weather-time, Property 4: Store Night Update Consistency**
 // Testing the vital forces that bind our necromantic companion...
 
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -15,6 +17,7 @@ import {
   Stage,
   Mood
 } from '../petStore';
+import { WeatherState } from '../../../services/weatherService';
 
 describe('Pet Store Property Tests', () => {
   beforeEach(() => {
@@ -485,3 +488,252 @@ describe('Pet Store Property Tests', () => {
     expect(usePetStore.getState().health).toBe(25);
     expect(usePetStore.getState().mood).toBe(Mood.HUNGRY);
   });
+
+describe('World Context Property Tests', () => {
+  beforeEach(() => {
+    // Resurrecting the pet and clearing the skies before each test
+    usePetStore.getState().reset();
+  });
+
+  it('Property 3: For any valid WeatherState, setWeather SHALL update the store weather property to that exact value', () => {
+    // **Feature: world-context-weather-time, Property 3: Store Weather Update Consistency**
+    // **Validates: Requirements 3.3**
+    
+    fc.assert(
+      fc.property(
+        // Generate all possible WeatherState values
+        fc.constantFrom('CLEAR' as const, 'RAIN' as const, 'SNOW' as const, 'STORM' as const),
+        (weatherState) => {
+          const store = usePetStore.getState();
+          store.reset();
+          
+          // Set the weather
+          store.setWeather(weatherState);
+          
+          const finalWeather = usePetStore.getState().weather;
+          
+          // Property: Weather must match exactly what was set
+          expect(finalWeather).toBe(weatherState);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('Property 3: Multiple sequential weather updates SHALL maintain consistency', () => {
+    // **Feature: world-context-weather-time, Property 3: Store Weather Update Consistency**
+    // **Validates: Requirements 3.3**
+    
+    fc.assert(
+      fc.property(
+        // Generate a sequence of weather changes
+        fc.array(
+          fc.constantFrom('CLEAR' as const, 'RAIN' as const, 'SNOW' as const, 'STORM' as const),
+          { minLength: 1, maxLength: 20 }
+        ),
+        (weatherSequence) => {
+          const store = usePetStore.getState();
+          store.reset();
+          
+          // Apply all weather changes
+          weatherSequence.forEach(weather => {
+            store.setWeather(weather);
+            
+            // Property: After each update, weather must match the last set value
+            const currentWeather = usePetStore.getState().weather;
+            expect(currentWeather).toBe(weather);
+          });
+          
+          // Property: Final weather should be the last in sequence
+          const finalWeather = usePetStore.getState().weather;
+          expect(finalWeather).toBe(weatherSequence[weatherSequence.length - 1]);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('Property 3: Weather updates SHALL not affect other store properties', () => {
+    // **Feature: world-context-weather-time, Property 3: Store Weather Update Consistency**
+    // **Validates: Requirements 3.3**
+    
+    fc.assert(
+      fc.property(
+        fc.constantFrom('CLEAR' as const, 'RAIN' as const, 'SNOW' as const, 'STORM' as const),
+        (weatherState) => {
+          const store = usePetStore.getState();
+          store.reset();
+          
+          // Capture initial state
+          const initialHealth = usePetStore.getState().health;
+          const initialXP = usePetStore.getState().xp;
+          const initialStage = usePetStore.getState().stage;
+          const initialMood = usePetStore.getState().mood;
+          const initialIsNight = usePetStore.getState().isNight;
+          
+          // Set weather
+          store.setWeather(weatherState);
+          
+          // Property: Other properties should remain unchanged
+          expect(usePetStore.getState().health).toBe(initialHealth);
+          expect(usePetStore.getState().xp).toBe(initialXP);
+          expect(usePetStore.getState().stage).toBe(initialStage);
+          expect(usePetStore.getState().mood).toBe(initialMood);
+          expect(usePetStore.getState().isNight).toBe(initialIsNight);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('Property 4: For any boolean value, setIsNight SHALL update the store isNight property to that exact value', () => {
+    // **Feature: world-context-weather-time, Property 4: Store Night Update Consistency**
+    // **Validates: Requirements 3.4**
+    
+    fc.assert(
+      fc.property(
+        // Generate boolean values
+        fc.boolean(),
+        (isNightValue) => {
+          const store = usePetStore.getState();
+          store.reset();
+          
+          // Set the night mode
+          store.setIsNight(isNightValue);
+          
+          const finalIsNight = usePetStore.getState().isNight;
+          
+          // Property: isNight must match exactly what was set
+          expect(finalIsNight).toBe(isNightValue);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('Property 4: Multiple sequential isNight updates SHALL maintain consistency', () => {
+    // **Feature: world-context-weather-time, Property 4: Store Night Update Consistency**
+    // **Validates: Requirements 3.4**
+    
+    fc.assert(
+      fc.property(
+        // Generate a sequence of day/night changes
+        fc.array(
+          fc.boolean(),
+          { minLength: 1, maxLength: 20 }
+        ),
+        (nightSequence) => {
+          const store = usePetStore.getState();
+          store.reset();
+          
+          // Apply all night mode changes
+          nightSequence.forEach(isNight => {
+            store.setIsNight(isNight);
+            
+            // Property: After each update, isNight must match the last set value
+            const currentIsNight = usePetStore.getState().isNight;
+            expect(currentIsNight).toBe(isNight);
+          });
+          
+          // Property: Final isNight should be the last in sequence
+          const finalIsNight = usePetStore.getState().isNight;
+          expect(finalIsNight).toBe(nightSequence[nightSequence.length - 1]);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('Property 4: isNight updates SHALL not affect other store properties', () => {
+    // **Feature: world-context-weather-time, Property 4: Store Night Update Consistency**
+    // **Validates: Requirements 3.4**
+    
+    fc.assert(
+      fc.property(
+        fc.boolean(),
+        (isNightValue) => {
+          const store = usePetStore.getState();
+          store.reset();
+          
+          // Capture initial state
+          const initialHealth = usePetStore.getState().health;
+          const initialXP = usePetStore.getState().xp;
+          const initialStage = usePetStore.getState().stage;
+          const initialMood = usePetStore.getState().mood;
+          const initialWeather = usePetStore.getState().weather;
+          
+          // Set night mode
+          store.setIsNight(isNightValue);
+          
+          // Property: Other properties should remain unchanged
+          expect(usePetStore.getState().health).toBe(initialHealth);
+          expect(usePetStore.getState().xp).toBe(initialXP);
+          expect(usePetStore.getState().stage).toBe(initialStage);
+          expect(usePetStore.getState().mood).toBe(initialMood);
+          expect(usePetStore.getState().weather).toBe(initialWeather);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('Property 3 & 4: Weather and isNight updates SHALL be independent', () => {
+    // **Feature: world-context-weather-time, Property 3 & 4: Combined consistency**
+    // **Validates: Requirements 3.3, 3.4**
+    
+    fc.assert(
+      fc.property(
+        fc.constantFrom('CLEAR' as const, 'RAIN' as const, 'SNOW' as const, 'STORM' as const),
+        fc.boolean(),
+        (weatherState, isNightValue) => {
+          const store = usePetStore.getState();
+          store.reset();
+          
+          // Set weather first
+          store.setWeather(weatherState);
+          expect(usePetStore.getState().weather).toBe(weatherState);
+          
+          // Set night mode - should not affect weather
+          store.setIsNight(isNightValue);
+          expect(usePetStore.getState().isNight).toBe(isNightValue);
+          expect(usePetStore.getState().weather).toBe(weatherState);
+          
+          // Set weather again - should not affect night mode
+          const newWeather = weatherState === 'CLEAR' ? 'RAIN' : 'CLEAR';
+          store.setWeather(newWeather);
+          expect(usePetStore.getState().weather).toBe(newWeather);
+          expect(usePetStore.getState().isNight).toBe(isNightValue);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('Property 3 & 4: Reset SHALL restore weather and isNight to defaults', () => {
+    // **Feature: world-context-weather-time, Property 3 & 4: Reset behavior**
+    // **Validates: Requirements 3.1, 3.2**
+    
+    fc.assert(
+      fc.property(
+        fc.constantFrom('CLEAR' as const, 'RAIN' as const, 'SNOW' as const, 'STORM' as const),
+        fc.boolean(),
+        (weatherState, isNightValue) => {
+          const store = usePetStore.getState();
+          store.reset();
+          
+          // Modify world context
+          store.setWeather(weatherState);
+          store.setIsNight(isNightValue);
+          
+          // Reset the store
+          store.reset();
+          
+          // Property: Weather and isNight should return to defaults
+          expect(usePetStore.getState().weather).toBe('CLEAR');
+          expect(usePetStore.getState().isNight).toBe(false);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+});

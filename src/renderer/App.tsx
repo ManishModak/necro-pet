@@ -4,12 +4,17 @@ import { ActivityLog } from './features/activity-log/ActivityLog';
 import { useActivityLogStore } from './features/activity-log/activityLogStore';
 import { PetDisplay } from './features/pet/PetDisplay';
 import { useGameLoop } from './features/pet/useGameLoop';
+import { useWorldContext } from './hooks/useWorldContext';
+import { WeatherOverlay } from './features/weather/WeatherOverlay';
 
 function App() {
   const addEntry = useActivityLogStore((state) => state.addEntry);
 
   // Awakening the Necro-Pet's life force...
   useGameLoop();
+
+  // Summoning the world context from the ethereal realm...
+  useWorldContext();
 
   // Summoning the IPC listeners when the séance begins
   useEffect(() => {
@@ -68,8 +73,9 @@ function App() {
       {/* The main séance chamber - split between Pet and Activity Log */}
       <div className="flex-1 overflow-hidden flex">
         {/* The Pet's Resurrection Chamber */}
-        <div className="w-1/3 border-r-2 border-ghostly-blue bg-black bg-opacity-60">
+        <div className="w-1/3 border-r-2 border-ghostly-blue bg-black bg-opacity-60 relative">
           <PetDisplay />
+          <WeatherOverlay />
         </div>
         
         {/* The Activity Log Crypt */}
