@@ -1,0 +1,41 @@
+/* Awakening the ancient styles from the crypt... */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pixel-art rendering incantation */
+@layer utilities {
+  .pixelated {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Base haunted house aesthetic */
+@layer base {
+  body {
+    @apply bg-gameboy-green text-ghostly-blue;
+    font-family: 'Courier New', monospace;
+    image-rendering: pixelated;
+  }
+  
+  /* Scanline effect for that retro CRT vibe */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    z-index: 9999;
+  }
+}

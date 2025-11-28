@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "open-meteo": {
+      "command": "uvx",
+      "args": ["--from", "mcp[cli]", "mcp", "run", "mcp-servers/open-meteo-server.py"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
