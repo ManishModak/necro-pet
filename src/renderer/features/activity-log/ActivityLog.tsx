@@ -37,11 +37,11 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
   };
 
   return (
-    <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green">
+    <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green glow-border">
       {/* The crypt keeper's header */}
-      <div className="px-3 py-2 border-b-2 border-terminal-green bg-panel-bg">
-        <h2 className="text-terminal-green text-sm font-bold pixelated">
-          📜 SPIRIT ACTIVITY LOG 📜
+      <div className="px-2 py-1 border-b-2 border-terminal-green bg-panel-bg">
+        <h2 className="text-terminal-green text-xs font-bold pixelated text-glow whitespace-nowrap">
+          📜 ACTIVITY LOG
         </h2>
         <p className="text-terminal-green text-xs pixelated">
           {entries.length} souls recorded

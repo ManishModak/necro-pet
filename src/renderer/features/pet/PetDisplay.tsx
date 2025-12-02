@@ -251,16 +251,17 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
   // Calculating health bar color based on vitality
   const getHealthColor = (): string => {
     if (health === 0) return 'bg-blood-red';
-    if (health <= 50) return 'bg-blood-red';
-    return 'bg-ghostly-blue';
+    if (health <= 30) return 'bg-blood-red';
+    if (health <= 60) return 'bg-yellow-500';
+    return 'bg-terminal-green';
   };
 
   return (
-    <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green">
+    <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green glow-border">
       {/* The crypt keeper's header */}
-      <div className="px-3 py-2 border-b-2 border-terminal-green bg-panel-bg">
-        <h2 className="text-terminal-green text-sm font-bold pixelated">
-          💀 NECRO-PET STATUS 💀
+      <div className="px-2 py-1 border-b-2 border-terminal-green bg-panel-bg">
+        <h2 className="text-terminal-green text-xs font-bold pixelated text-glow whitespace-nowrap">
+          💀 PET STATUS
         </h2>
         <p className="text-terminal-green text-xs pixelated">
           Stage: {stageName}
@@ -271,30 +272,30 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
       <div className="flex-1 flex flex-col items-center justify-center p-4 space-y-4">
         {/* The pet's visual form - pixel art summoned from the void */}
         <div 
-          className={`flex items-center justify-center ${getAnimationClass()}`} 
+          className={`flex items-center justify-center pet-glow ${getAnimationClass()}`} 
           style={{ imageRendering: 'pixelated' }}
         >
           {visual}
         </div>
 
         {/* The mood whisper */}
-        <div className="text-terminal-green text-xs text-center pixelated">
+        <div className="text-terminal-green text-sm text-center pixelated font-bold">
           {moodDesc}
         </div>
 
         {/* The vital statistics */}
-        <div className="w-full max-w-xs space-y-3">
+        <div className="w-full px-2 space-y-2">
           {/* Health bar - the life force */}
           <div className="space-y-1">
-            <div className="flex justify-between items-center">
-              <span className="text-terminal-green text-xs font-bold pixelated">
-                ❤️ HEALTH
+            <div className="flex justify-between items-center gap-2">
+              <span className="text-terminal-green text-xs font-bold pixelated whitespace-nowrap">
+                ❤️ HP
               </span>
-              <span className="text-terminal-green text-xs pixelated">
+              <span className="text-terminal-green text-xs pixelated whitespace-nowrap">
                 {health}/100
               </span>
             </div>
-            <div className="w-full h-4 bg-panel-bg border border-terminal-green">
+            <div className="w-full h-3 bg-panel-bg border border-terminal-green">
               <div
                 className={`h-full ${getHealthColor()} transition-all duration-300`}
                 style={{ width: `${health}%` }}
@@ -304,18 +305,19 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
 
           {/* XP bar - the accumulated essence */}
           <div className="space-y-1">
-            <div className="flex justify-between items-center">
-              <span className="text-terminal-green text-xs font-bold pixelated">
-                ✨ ESSENCE (XP)
+            <div className="flex justify-between items-center gap-2">
+              <span className="text-terminal-green text-xs font-bold pixelated whitespace-nowrap">
+                ✨ XP
               </span>
-              <span className="text-terminal-green text-xs pixelated">
+              <span className="text-terminal-green text-xs pixelated whitespace-nowrap">
                 {xp}
               </span>
             </div>
-            <div className="w-full px-2 py-1 bg-panel-bg border border-terminal-green">
-              <div className="text-terminal-green text-xs text-center pixelated">
-                {xp <= 10 ? 'Embryonic' : xp <= 50 ? 'Growing' : 'Ascended'}
-              </div>
+            <div className="w-full h-3 bg-panel-bg border border-terminal-green">
+              <div
+                className="h-full bg-ghostly-blue transition-all duration-300"
+                style={{ width: `${Math.min(xp, 100)}%` }}
+              />
             </div>
           </div>
         </div>

@@ -17,8 +17,8 @@ export interface WindowConfig {
 // Conjuring the main window with dark magic
 export const createMainWindow = (): BrowserWindow => {
   const config: WindowConfig = {
-    width: 320,
-    height: 400,
+    width: 480,
+    height: 520,
     transparent: true,
     frame: false,
     alwaysOnTop: true,
@@ -44,10 +44,10 @@ export const createMainWindow = (): BrowserWindow => {
         ...details.responseHeaders,
         'Content-Security-Policy': [
           process.env.VITE_DEV_SERVER_URL
-            ? // Development mode - allow hot reload and dev tools
-              "default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss:;"
-            : // Production mode - strict security
-              "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
+            ? // Development mode - allow hot reload, dev tools, and weather API
+              "default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss: https://api.open-meteo.com;"
+            : // Production mode - allow weather API
+              "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.open-meteo.com;"
         ]
       }
     });

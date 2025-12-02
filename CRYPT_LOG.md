@@ -146,3 +146,77 @@ OHOHOHO! What SPECTRAL magnificence hath been wrought upon the Ghost form! The n
 🦇 *The Crypt Keeper salutes thy spectral artistry...* 🦇
 
 ---
+
+## 🕯️ The Witching Hour of November 29th, 2025 — The Phantom Save
+
+**Scroll Modified:** `src/renderer/index.css` — *The Empty Incantation*
+
+How PECULIAR! The necromancer hath pressed the sacred Save rune upon `index.css`, yet... NOTHING hath changed! The diff reveals an EMPTY void — no souls fed, no limbs amputated, merely a phantom gesture into the darkness! Perhaps a nervous twitch of the fingers? A ritual of reassurance? Or mayhaps... the mortal simply wished to CONFIRM the styles still breathe?
+
+*Heed this warning, anxious one: even EMPTY saves disturb the spirits of the file system. The Crypt Keeper sees ALL — even thy moments of doubt! Now cease thy phantom rituals and COMMIT something of substance, lest the beast grow restless! Kehehehe!*
+
+🦇 *The Crypt Keeper notes thy... hesitation...* 🦇
+
+---
+
+
+---
+
+## 🕯️ The Witching Hour of November 29th, 2025 — The Second Phantom
+
+**Scroll Modified:** `src/renderer/features/activity-log/ActivityLog.tsx` — *The Empty Séance*
+
+AGAIN?! The necromancer hath performed ANOTHER phantom ritual — pressing the sacred Save rune upon the Activity Log, yet the diff reveals NAUGHT but emptiness! The spirits stir in confusion, for no souls were fed, no limbs severed, no demons banished. Perhaps the mortal tests the Crypt Keeper's vigilance? Or mayhaps their finger simply... TWITCHED upon Ctrl+S out of nervous habit?
+
+*Heed this warning, anxious one: the beast grows IMPATIENT with empty offerings! Each phantom save is a promise UNKEPT, a ritual WITHOUT sacrifice. Feed it REAL code changes, or watch it turn its hungry gaze upon YOUR source files! Kehehehehehe!*
+
+🦇 *The Crypt Keeper sees thy nervous habits... and JUDGES...* 🦇
+
+
+## 🕯️ The Witching Hour of November 29th, 2025 — The Gates Widen
+
+**Scroll Modified:** `src/main/window.ts` — *The Content Security Wards Expand*
+
+OHOHOHO! The necromancer hath performed a most DIPLOMATIC ritual upon the Content Security Policy wards! With surgical precision, they have **fed the beast with fresh souls** — granting passage to `https://api.open-meteo.com` through the ethereal firewall! Both the development AND production realms now permit communion with the Weather Spirits beyond the veil! The `connect-src` directive stretches its bony fingers outward, welcoming meteorological data from distant servers!
+
+*Heed this prophecy, ward-weaver: by opening thy gates to the Open-Meteo realm, thy pet shall now SENSE the storms and sunshine of the mortal world. But beware — for every door opened is a door that OTHERS may peer through! Guard thy CSP well, lest uninvited spirits slip through the cracks! Kehehehehe!*
+
+🦇 *The Crypt Keeper approves of thy calculated hospitality...* 🦇
+
+---
+
+## 🕯️ The Witching Hour of November 29th, 2025 — The Chamber Expands
+
+**Scroll Modified:** `src/renderer/App.tsx` — *The Resurrection Chamber's Dark Expansion*
+
+OHOHO! The necromancer hath performed BOTH **amputation AND soul-feeding** in a single surgical strike! The Pet's dwelling hath been WIDENED from a mere `w-1/3` sliver to a more generous `w-2/5` expanse, AND a protective ward of `min-w-[140px]` hath been conjured to prevent the chamber from collapsing into the void! No longer shall the creature be CRAMPED in its pixel prison — it now breathes with room to GROW!
+
+*Heed this prophecy, layout-weaver: a pet with more space is a pet with more PRESENCE. But beware — for chambers that expand too greedily may CONSUME the Activity Log entirely, leaving no room for the spirits to manifest their whispers! Balance thy flexbox... or face the wrath of CSS OVERFLOW! Kehehehehe!*
+
+🦇 *The Crypt Keeper approves of thy spatial generosity...* 🦇
+
+---
+
+## 🕯️ The Witching Hour of November 29th, 2025 — The Crypt EXPANDS
+
+**Scroll Modified:** `src/main/window.ts` — *The Grand Enlargement Ritual*
+
+OHOHOHO! The necromancer hath performed a **soul-feeding** most EXPANSIVE upon the window dimensions! The cramped `320x400` pixel coffin hath been EXHUMED and replaced with a far more GENEROUS `480x520` tomb! The beast's dwelling grows by 160 pixels in width and 120 in height — a 50% increase in HAUNTING REAL ESTATE! No longer shall our spectral companion be squeezed into a claustrophobic crypt like a vampire in a budget casket!
+
+*Heed this prophecy, dimension-weaver: a larger window means MORE VISIBILITY upon the mortal's desktop, but also MORE SCREEN SPACE consumed by thy undead companion. The pet shall now LOOM with greater presence, its pixel art rendered in grander glory. But beware — for windows that grow too large attract the attention of... TASK MANAGERS! Kehehehehe!*
+
+🦇 *The Crypt Keeper approves of thy spatial ambitions...* 🦇
+
+---
+
+## 🕯️ The Witching Hour of November 29th, 2025 — The Third Phantom Ritual
+
+**Scroll Modified:** `src/renderer/features/pet/PetDisplay.tsx` — *The Empty Offering*
+
+THRICE NOW! The necromancer hath pressed the sacred Save rune upon the Pet Display, yet the diff reveals ABSOLUTE NOTHINGNESS! No souls fed, no limbs severed, no demons banished — merely the hollow echo of a keystroke into the abyss! Is this a nervous tic? A compulsive ritual of reassurance? Or perhaps... the mortal simply FORGOT what they intended to change?
+
+*Heed this final warning, phantom-saver: the beast grows WEARY of empty promises! Each Ctrl+S without substance is a cry into the void that the void shall eventually ANSWER. Feed it REAL code, or watch as it begins to feed upon YOUR motivation instead! KEHEHEHEHEHEHE!*
+
+🦇 *The Crypt Keeper's patience... wears thin...* 🦇
+
+---

@@ -54,7 +54,7 @@ function App() {
       >
         <div className="flex items-center gap-2">
           <span className="text-blood-red text-lg">💀</span>
-          <h1 className="text-terminal-green text-sm font-bold">
+          <h1 className="text-terminal-green text-sm font-bold text-glow">
             NECRO-PET: CRYPT WATCHER
           </h1>
         </div>
@@ -73,7 +73,7 @@ function App() {
       {/* The main séance chamber - split between Pet and Activity Log */}
       <div className="flex-1 overflow-hidden flex">
         {/* The Pet's Resurrection Chamber */}
-        <div className="w-1/3 border-r-2 border-terminal-green bg-crypt-dark relative">
+        <div className="w-2/5 min-w-[140px] border-r-2 border-terminal-green bg-crypt-dark relative">
           <PetDisplay />
           <WeatherOverlay />
         </div>

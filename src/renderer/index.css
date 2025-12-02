@@ -19,6 +19,21 @@
   image-rendering: crisp-edges;
 }
 
+/* Glowing border effect for that CRT monitor vibe */
+@utility glow-border {
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.5), inset 0 0 5px rgba(0, 255, 65, 0.1);
+}
+
+/* Pet glow effect - makes the creature pop */
+@utility pet-glow {
+  filter: drop-shadow(0 0 8px rgba(0, 255, 65, 0.6));
+}
+
+/* Text glow for important elements */
+@utility text-glow {
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.8), 0 0 20px rgba(0, 255, 65, 0.4);
+}
+
 /* Base haunted house aesthetic */
 @layer base {
   body {
