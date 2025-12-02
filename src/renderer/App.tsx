@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { ActivityLog } from './features/activity-log/ActivityLog';
 import { useActivityLogStore } from './features/activity-log/activityLogStore';
 import { PetDisplay } from './features/pet/PetDisplay';
+import { usePetStore } from './features/pet/petStore';
 import { useGameLoop } from './features/pet/useGameLoop';
 import { useWorldContext } from './hooks/useWorldContext';
 import { WeatherOverlay } from './features/weather/WeatherOverlay';
@@ -17,6 +18,9 @@ function App() {
 
   // Summoning the world context from the ethereal realm...
   useWorldContext();
+
+  // Get pet store actions
+  const feedFromCommit = usePetStore((state) => state.feedFromCommit);
 
   // Summoning the IPC listeners when the séance begins
   useEffect(() => {
@@ -33,13 +37,25 @@ function App() {
       console.log('🦇 New spirit summoned:', event.path);
       addEntry(event);
     });
+    
+    // Binding the commit offerings from the Git Oracle
+    window.electronAPI.onCommitDetected((event) => {
+      console.log('🦇 Commit offering received:', event.message);
+      feedFromCommit(event.hash, event.message, event.timestamp);
+      addEntry({
+        type: 'file:added', // Reuse existing type for now
+        path: `COMMIT: ${event.message.substring(0, 50)}`,
+        timestamp: event.timestamp
+      });
+    });
 
     // Banishing all listeners when the séance ends
     return () => {
       console.log('🕯️ Closing the portal... banishing listeners...');
       window.electronAPI.removeFileListeners();
+      window.electronAPI.removeCommitListeners();
     };
-  }, [addEntry]);
+  }, [addEntry, feedFromCommit]);
 
   // Banishing the window back to the void
   const handleClose = () => {

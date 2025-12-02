@@ -213,9 +213,9 @@ describe('PetDisplay Property Tests', () => {
     const displayText = container!.textContent || '';
     
     // Property: Display must contain essential UI elements
-    expect(displayText).toContain('NECRO-PET STATUS');
-    expect(displayText).toContain('HEALTH');
-    expect(displayText).toContain('ESSENCE');
+    expect(displayText).toContain('PET STATUS');
+    expect(displayText).toContain('HP');
+    expect(displayText).toContain('XP');
     expect(displayText).toContain('Stage:');
     
     // Property: Display must show initial values

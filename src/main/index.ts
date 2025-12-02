@@ -3,6 +3,8 @@ import { app, BrowserWindow } from 'electron';
 import { createMainWindow } from './window';
 import { registerIPCHandlers } from './ipc';
 import { initFileWatcher, stopFileWatcher } from './fileWatcher';
+import { initGitWatcher, stopGitWatcher, setLastKnownHash } from './gitWatcher';
+import { loadSaveData, createNewSave, saveSaveData, getHoursSinceLastCommit, calculateDecay } from './persistence';
 
 // Ensuring only one instance of our haunted pet exists
 const gotTheLock = app.requestSingleInstanceLock();
@@ -26,19 +28,48 @@ if (!gotTheLock) {
   });
 
   // When the spirits are ready...
-  app.whenReady().then(() => {
+  app.whenReady().then(async () => {
     console.log('🦇 Resurrecting the Necro-Pet from the digital void...');
     
     // Opening the channels between realms
     registerIPCHandlers();
     
+    // Loading the pet's soul from the crypt
+    let saveData = loadSaveData();
+    if (!saveData) {
+      console.log('🦇 No save found. Summoning a new pet...');
+      saveData = createNewSave();
+    } else {
+      // Calculate and log time decay
+      const hoursSinceCommit = getHoursSinceLastCommit(saveData.lastCommitDate);
+      const decay = calculateDecay(hoursSinceCommit);
+      if (decay > 0) {
+        console.log(`🦇 Pet has decayed ${decay} HP from ${Math.floor(hoursSinceCommit)} hours of neglect...`);
+        saveData.health = Math.max(0, saveData.health - decay);
+        saveSaveData(saveData);
+      }
+    }
+    
+    // Set the last known commit hash for the git watcher
+    if (saveData.lastCommitHash) {
+      setLastKnownHash(saveData.lastCommitHash);
+    }
+    
     // Summoning the main window
-    createMainWindow();
+    const mainWindow = createMainWindow();
+    
+    // Send save data to renderer once window is ready
+    mainWindow.webContents.once('did-finish-load', () => {
+      mainWindow.webContents.send('save:loaded', saveData);
+    });
     
     // Awakening the file watcher to monitor the mortal realm
     const watchPath = process.cwd();
     console.log('👁️ Initiating surveillance of:', watchPath);
     initFileWatcher(watchPath);
+    
+    // Awakening the Git Oracle to watch for commits
+    await initGitWatcher({ watchPath, pollInterval: 30000 });
 
     // On macOS, re-summon window when dock icon is clicked
     app.on('activate', () => {
@@ -54,6 +85,7 @@ if (!gotTheLock) {
     if (process.platform !== 'darwin') {
       console.log('🦇 All windows banished. Returning to the void...');
       stopFileWatcher();
+      stopGitWatcher();
       app.quit();
     }
   });
@@ -62,5 +94,6 @@ if (!gotTheLock) {
   app.on('before-quit', () => {
     console.log('🌙 Preparing to return to the void...');
     stopFileWatcher();
+    stopGitWatcher();
   });
 }

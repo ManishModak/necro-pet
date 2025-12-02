@@ -1,0 +1,170 @@
+// The Crypt's Memory - persisting the pet's soul across the void...
+import { app } from 'electron';
+import * as fs from 'fs';
+import * as path from 'path';
+
+// The sacred contract for saved pet data
+export interface SaveData {
+  version: number;
+  health: number;
+  xp: number;
+  stage: string;
+  mood: string;
+  weather: string;
+  isNight: boolean;
+  lastCommitDate: string | null;  // ISO timestamp
+  lastCommitHash: string | null;
+  deathCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// The default state for a freshly summoned pet
+const DEFAULT_SAVE_DATA: SaveData = {
+  version: 1,
+  health: 100,
+  xp: 0,
+  stage: 'EGG',
+  mood: 'HAPPY',
+  weather: 'CLEAR',
+  isNight: false,
+  lastCommitDate: null,
+  lastCommitHash: null,
+  deathCount: 0,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
+};
+
+// The path to the crypt's memory vault
+export const getSavePath = (): string => {
+  // Use user's home directory for global persistence
+  const homeDir = app.getPath('home');
+  return path.join(homeDir, '.necro-pet', 'save.json');
+};
+
+// The path to the save directory
+const getSaveDir = (): string => {
+  const homeDir = app.getPath('home');
+  return path.join(homeDir, '.necro-pet');
+};
+
+// Ensure the save directory exists in the mortal realm
+const ensureSaveDir = (): void => {
+  const saveDir = getSaveDir();
+  if (!fs.existsSync(saveDir)) {
+    console.log('🦇 Creating the crypt vault at:', saveDir);
+    fs.mkdirSync(saveDir, { recursive: true });
+  }
+};
+
+// Load the pet's soul from the void
+export const loadSaveData = (): SaveData | null => {
+  const savePath = getSavePath();
+  
+  try {
+    if (!fs.existsSync(savePath)) {
+      console.log('🦇 No save file found. A new pet shall be summoned...');
+      return null;
+    }
+    
+    const rawData = fs.readFileSync(savePath, 'utf-8');
+    const data = JSON.parse(rawData) as SaveData;
+    
+    // Validate the save data has required fields
+    if (typeof data.health !== 'number' || typeof data.xp !== 'number') {
+      console.warn('🦇 Save file corrupted! The soul is malformed...');
+      backupCorruptedSave(savePath);
+      return null;
+    }
+    
+    console.log('🦇 Pet soul loaded from the crypt:', savePath);
+    return data;
+    
+  } catch (error) {
+    console.error('🦇 Failed to load save file:', error);
+    backupCorruptedSave(savePath);
+    return null;
+  }
+};
+
+// Save the pet's soul to the void
+export const saveSaveData = (data: Partial<SaveData>): void => {
+  ensureSaveDir();
+  const savePath = getSavePath();
+  
+  try {
+    // Load existing data or use defaults
+    let existingData = loadSaveData() || { ...DEFAULT_SAVE_DATA };
+    
+    // Merge with new data
+    const saveData: SaveData = {
+      ...existingData,
+      ...data,
+      updatedAt: new Date().toISOString()
+    };
+    
+    // Write to the crypt
+    fs.writeFileSync(savePath, JSON.stringify(saveData, null, 2), 'utf-8');
+    console.log('🦇 Pet soul saved to the crypt');
+    
+  } catch (error) {
+    console.error('🦇 Failed to save pet soul:', error);
+  }
+};
+
+// Create a new save with default values
+export const createNewSave = (): SaveData => {
+  ensureSaveDir();
+  const savePath = getSavePath();
+  
+  const newSave: SaveData = {
+    ...DEFAULT_SAVE_DATA,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  
+  try {
+    fs.writeFileSync(savePath, JSON.stringify(newSave, null, 2), 'utf-8');
+    console.log('🦇 New pet summoned and saved to:', savePath);
+  } catch (error) {
+    console.error('🦇 Failed to create new save:', error);
+  }
+  
+  return newSave;
+};
+
+// Backup a corrupted save file before overwriting
+const backupCorruptedSave = (savePath: string): void => {
+  try {
+    if (fs.existsSync(savePath)) {
+      const backupPath = `${savePath}.corrupted.${Date.now()}`;
+      fs.copyFileSync(savePath, backupPath);
+      console.log('🦇 Corrupted save backed up to:', backupPath);
+    }
+  } catch (error) {
+    console.error('🦇 Failed to backup corrupted save:', error);
+  }
+};
+
+// Calculate hours since last commit
+export const getHoursSinceLastCommit = (lastCommitDate: string | null): number => {
+  if (!lastCommitDate) {
+    return Infinity; // No commits ever = infinite time
+  }
+  
+  const lastCommit = new Date(lastCommitDate);
+  const now = new Date();
+  const diffMs = now.getTime() - lastCommit.getTime();
+  return diffMs / (1000 * 60 * 60); // Convert to hours
+};
+
+// Calculate health decay based on hours since last commit
+export const calculateDecay = (hoursSinceCommit: number): number => {
+  if (hoursSinceCommit <= 24) return 0;           // Grace period - Day 1
+  if (hoursSinceCommit <= 48) return 15;          // Day 2
+  if (hoursSinceCommit <= 72) return 40;          // Day 3 (15 + 25)
+  
+  // Day 4+: 40 + 35 per additional day
+  const additionalDays = Math.floor((hoursSinceCommit - 72) / 24);
+  return 40 + (additionalDays * 35);
+};

@@ -33,6 +33,13 @@ export interface WorldContextState {
   isNight: boolean;       // Whether darkness has fallen
 }
 
+// Commit tracking state - the soul's memory of offerings
+export interface CommitState {
+  lastCommitDate: string | null;   // ISO timestamp of last commit
+  lastCommitHash: string | null;   // Hash of last commit
+  deathCount: number;              // How many times the pet has perished
+}
+
 // Actions to manipulate the pet's existence
 export interface PetActions {
   decreaseHealth: (amount: number) => void;
@@ -45,6 +52,24 @@ export interface PetActions {
 export interface WorldContextActions {
   setWeather: (weather: WeatherState) => void;
   setIsNight: (isNight: boolean) => void;
+}
+
+// Actions for commit-based feeding
+export interface CommitActions {
+  feedFromCommit: (hash: string, message: string, timestamp: number) => void;
+  applyTimeDecay: (hoursSinceCommit: number) => void;
+  revivePet: (commitMessage: string) => void;
+  loadFromSave: (data: {
+    health: number;
+    xp: number;
+    stage: string;
+    mood: string;
+    weather: string;
+    isNight: boolean;
+    lastCommitDate: string | null;
+    lastCommitHash: string | null;
+    deathCount: number;
+  }) => void;
 }
 
 // Pure function: Clamp health to the mortal bounds [0, 100]
@@ -81,8 +106,32 @@ export const calculateMood = (health: number): Mood => {
   }
 };
 
+// Pure function: Calculate health decay based on hours since last commit
+export const calculateDecay = (hoursSinceCommit: number): number => {
+  if (hoursSinceCommit <= 24) return 0;           // Grace period - Day 1
+  if (hoursSinceCommit <= 48) return 15;          // Day 2
+  if (hoursSinceCommit <= 72) return 40;          // Day 3 (15 + 25)
+  
+  // Day 4+: 40 + 35 per additional day
+  const additionalDays = Math.floor((hoursSinceCommit - 72) / 24);
+  return 40 + (additionalDays * 35);
+};
+
+// Pure function: Calculate revival health based on commit message
+export const calculateRevivalHealth = (commitMessage: string): number => {
+  const lowerMessage = commitMessage.toLowerCase();
+  
+  // Special resurrection commit gives 75% health
+  if (lowerMessage.includes('resurrect')) {
+    return 75;
+  }
+  
+  // Normal revival gives 50% health
+  return 50;
+};
+
 // The Zustand store - the heart of our necromantic creation
-export const usePetStore = create<PetState & WorldContextState & PetActions & WorldContextActions>((set) => ({
+export const usePetStore = create<PetState & WorldContextState & CommitState & PetActions & WorldContextActions & CommitActions>((set) => ({
   // Initial state - a freshly summoned creature
   health: 100,
   xp: 0,
@@ -92,6 +141,11 @@ export const usePetStore = create<PetState & WorldContextState & PetActions & Wo
   // Initial world context - clear skies and daylight
   weather: 'CLEAR',
   isNight: false,
+  
+  // Initial commit state - no offerings yet
+  lastCommitDate: null,
+  lastCommitHash: null,
+  deathCount: 0,
 
   // Decrease health - the decay of life
   decreaseHealth: (amount: number) => set((state) => {
@@ -129,12 +183,84 @@ export const usePetStore = create<PetState & WorldContextState & PetActions & Wo
     stage: Stage.EGG,
     mood: Mood.HAPPY,
     weather: 'CLEAR',
-    isNight: false
+    isNight: false,
+    lastCommitDate: null,
+    lastCommitHash: null,
+    deathCount: 0
   }),
   
   // Set weather - change the atmospheric conditions
   setWeather: (weather: WeatherState) => set({ weather }),
   
   // Set night mode - toggle between day and night
-  setIsNight: (isNight: boolean) => set({ isNight })
+  setIsNight: (isNight: boolean) => set({ isNight }),
+  
+  // Feed from commit - the primary source of sustenance
+  feedFromCommit: (hash: string, message: string, timestamp: number) => set((state) => {
+    // If pet is dead, revive it instead
+    if (state.health === 0) {
+      const revivalHealth = calculateRevivalHealth(message);
+      return {
+        health: revivalHealth,
+        xp: state.xp + 15,
+        stage: calculateStage(state.xp + 15, revivalHealth),
+        mood: calculateMood(revivalHealth),
+        lastCommitDate: new Date(timestamp).toISOString(),
+        lastCommitHash: hash,
+        deathCount: state.deathCount + 1
+      };
+    }
+    
+    // Normal feeding - +20 HP, +15 XP
+    const newHealth = clampHealth(state.health + 20);
+    const newXP = state.xp + 15;
+    
+    return {
+      health: newHealth,
+      xp: newXP,
+      stage: calculateStage(newXP, newHealth),
+      mood: calculateMood(newHealth),
+      lastCommitDate: new Date(timestamp).toISOString(),
+      lastCommitHash: hash
+    };
+  }),
+  
+  // Apply time decay - the slow death from neglect
+  applyTimeDecay: (hoursSinceCommit: number) => set((state) => {
+    const decay = calculateDecay(hoursSinceCommit);
+    if (decay === 0) return state;
+    
+    const newHealth = clampHealth(state.health - decay);
+    return {
+      health: newHealth,
+      stage: calculateStage(state.xp, newHealth),
+      mood: calculateMood(newHealth)
+    };
+  }),
+  
+  // Revive pet - resurrection from the void
+  revivePet: (commitMessage: string) => set((state) => {
+    if (state.health > 0) return state; // Already alive
+    
+    const revivalHealth = calculateRevivalHealth(commitMessage);
+    return {
+      health: revivalHealth,
+      stage: calculateStage(state.xp, revivalHealth),
+      mood: calculateMood(revivalHealth),
+      deathCount: state.deathCount + 1
+    };
+  }),
+  
+  // Load from save - restore the pet's soul from the crypt
+  loadFromSave: (data) => set({
+    health: data.health,
+    xp: data.xp,
+    stage: data.stage as Stage,
+    mood: data.mood as Mood,
+    weather: data.weather as WeatherState,
+    isNight: data.isNight,
+    lastCommitDate: data.lastCommitDate,
+    lastCommitHash: data.lastCommitHash,
+    deathCount: data.deathCount
+  })
 }));
