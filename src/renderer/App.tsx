@@ -19,8 +19,11 @@ function App() {
   // Summoning the world context from the ethereal realm...
   useWorldContext();
 
-  // Get pet store actions
+  // Get pet store actions and state
   const feedFromCommit = usePetStore((state) => state.feedFromCommit);
+  const loadFromSave = usePetStore((state) => state.loadFromSave);
+  const applyTimeDecay = usePetStore((state) => state.applyTimeDecay);
+  const petState = usePetStore();
 
   // Summoning the IPC listeners when the séance begins
   useEffect(() => {
@@ -37,16 +40,37 @@ function App() {
       console.log('🦇 New spirit summoned:', event.path);
       addEntry(event);
     });
-    
+
     // Binding the commit offerings from the Git Oracle
     window.electronAPI.onCommitDetected((event) => {
       console.log('🦇 Commit offering received:', event.message);
       feedFromCommit(event.hash, event.message, event.timestamp);
+
+      const isResurrection = event.message.toLowerCase().includes('resurrect');
+
       addEntry({
-        type: 'file:added', // Reuse existing type for now
-        path: `COMMIT: ${event.message.substring(0, 50)}`,
+        type: isResurrection ? 'resurrection' : 'commit',
+        path: event.message,
         timestamp: event.timestamp
       });
+    });
+
+    // Binding the save data loader from the crypt
+    window.electronAPI.onSaveLoaded((data) => {
+      console.log('🦇 Loading pet soul from the crypt...');
+      loadFromSave(data);
+
+      // Calculate and apply time decay
+      if (data.lastCommitDate) {
+        const lastCommit = new Date(data.lastCommitDate);
+        const now = new Date();
+        const hoursSinceCommit = (now.getTime() - lastCommit.getTime()) / (1000 * 60 * 60);
+
+        if (hoursSinceCommit > 24) {
+          console.log(`🦇 Applying ${Math.floor(hoursSinceCommit)} hours of decay...`);
+          applyTimeDecay(hoursSinceCommit);
+        }
+      }
     });
 
     // Banishing all listeners when the séance ends
@@ -54,8 +78,34 @@ function App() {
       console.log('🕯️ Closing the portal... banishing listeners...');
       window.electronAPI.removeFileListeners();
       window.electronAPI.removeCommitListeners();
+      window.electronAPI.removeSaveListeners();
     };
-  }, [addEntry, feedFromCommit]);
+  }, [addEntry, feedFromCommit, loadFromSave, applyTimeDecay]);
+
+  // Auto-save pet state whenever it changes
+  useEffect(() => {
+    // Skip the initial mount
+    const saveData = {
+      health: petState.health,
+      xp: petState.xp,
+      stage: petState.stage,
+      mood: petState.mood,
+      weather: petState.weather,
+      isNight: petState.isNight,
+      lastCommitDate: petState.lastCommitDate,
+      lastCommitHash: petState.lastCommitHash,
+      deathCount: petState.deathCount
+    };
+
+    window.electronAPI.saveData(saveData);
+  }, [
+    petState.health,
+    petState.xp,
+    petState.stage,
+    petState.lastCommitDate,
+    petState.lastCommitHash,
+    petState.deathCount
+  ]);
 
   // Banishing the window back to the void
   const handleClose = () => {
@@ -76,21 +126,20 @@ function App() {
             NECRO-PET: CRYPT WATCHER
           </h1>
         </div>
-        
+
         <div className="flex items-center gap-2" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
           {/* Debug toggle button */}
           <button
             onClick={() => setShowDebug(!showDebug)}
-            className={`text-sm px-2 py-0.5 border transition-colors ${
-              showDebug 
-                ? 'bg-terminal-green text-crypt-dark border-terminal-green' 
-                : 'text-terminal-green border-terminal-green hover:bg-terminal-green hover:text-crypt-dark'
-            }`}
+            className={`text-sm px-2 py-0.5 border transition-colors ${showDebug
+              ? 'bg-terminal-green text-crypt-dark border-terminal-green'
+              : 'text-terminal-green border-terminal-green hover:bg-terminal-green hover:text-crypt-dark'
+              }`}
             title="Toggle Necromancer's Control Panel"
           >
             🔮
           </button>
-          
+
           {/* Close button */}
           <button
             onClick={handleClose}
@@ -109,7 +158,7 @@ function App() {
           <PetDisplay />
           <WeatherOverlay />
         </div>
-        
+
         {/* The Activity Log Crypt */}
         <div className="flex-1">
           <ActivityLog />
@@ -122,7 +171,7 @@ function App() {
           🕯️ Watching the veil between worlds... 🕯️
         </p>
         {/* Resize grip - bottom right corner */}
-        <div 
+        <div
           className="resize-grip text-terminal-green opacity-50 hover:opacity-100 cursor-se-resize select-none"
           style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
         >

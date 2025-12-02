@@ -30,10 +30,10 @@ if (!gotTheLock) {
   // When the spirits are ready...
   app.whenReady().then(async () => {
     console.log('🦇 Resurrecting the Necro-Pet from the digital void...');
-    
+
     // Opening the channels between realms
     registerIPCHandlers();
-    
+
     // Loading the pet's soul from the crypt
     let saveData = loadSaveData();
     if (!saveData) {
@@ -49,25 +49,35 @@ if (!gotTheLock) {
         saveSaveData(saveData);
       }
     }
-    
+
     // Set the last known commit hash for the git watcher
     if (saveData.lastCommitHash) {
       setLastKnownHash(saveData.lastCommitHash);
     }
-    
+
     // Summoning the main window
     const mainWindow = createMainWindow();
-    
+
     // Send save data to renderer once window is ready
     mainWindow.webContents.once('did-finish-load', () => {
       mainWindow.webContents.send('save:loaded', saveData);
     });
-    
-    // Awakening the file watcher to monitor the mortal realm
-    const watchPath = process.cwd();
+
+    // Determining which path to watch - use saved path or default to current directory
+    const watchPath = saveData.watchedProjectPath || process.cwd();
+
+    // Save the watch path if it wasn't set
+    if (!saveData.watchedProjectPath) {
+      console.log('🦇 Setting default watch path:', watchPath);
+      saveData.watchedProjectPath = watchPath;
+      saveSaveData({ watchedProjectPath: watchPath });
+    }
+
     console.log('👁️ Initiating surveillance of:', watchPath);
+
+    // Awakening the file watcher to monitor the mortal realm
     initFileWatcher(watchPath);
-    
+
     // Awakening the Git Oracle to watch for commits
     await initGitWatcher({ watchPath, pollInterval: 30000 });
 
@@ -89,7 +99,7 @@ if (!gotTheLock) {
       app.quit();
     }
   });
-  
+
   // Cleanup when the app is about to quit
   app.on('before-quit', () => {
     console.log('🌙 Preparing to return to the void...');

@@ -28,6 +28,20 @@ const necroStyles = `
   100% { clip-path: inset(0 0 0 0); }
 }
 
+@keyframes resurrect {
+  0% { transform: scale(0.8) rotate(-10deg); opacity: 0.3; filter: brightness(0.5); }
+  20% { transform: scale(1.2) rotate(5deg); opacity: 1; filter: brightness(2); }
+  40% { transform: scale(0.9) rotate(-3deg); filter: brightness(1.5); }
+  60% { transform: scale(1.1) rotate(2deg); filter: brightness(1.8); }
+  80% { transform: scale(0.95); filter: brightness(1.2); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
+}
+
+@keyframes flash-bg {
+  0%, 100% { background-color: rgba(0, 0, 0, 0); }
+  50% { background-color: rgba(0, 255, 65, 0.3); }
+}
+
 .animate-breathing {
   animation: breathing 2s ease-in-out infinite;
 }
@@ -38,6 +52,14 @@ const necroStyles = `
 
 .animate-glitch {
   animation: glitch 0.3s steps(1) forwards;
+}
+
+.animate-resurrect {
+  animation: resurrect 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.flash-bg {
+  animation: flash-bg 1.5s ease-in-out forwards;
 }
 `;
 
@@ -162,7 +184,7 @@ const getStageVisual = (stage: Stage, mood: Mood): React.ReactNode => {
   if (stage === Stage.GHOST) {
     return <GhostSvg />;
   }
-  
+
   switch (stage) {
     case Stage.EGG:
       return <EggSvg mood={mood} />;
@@ -210,10 +232,18 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
   useNecroStyles();
 
   // Channeling the pet's essence from the store
-  const { health, xp, stage, mood } = usePetStore();
+  const { health, xp, stage, mood, deathCount } = usePetStore();
 
   // The glitch state - random spectral interference for ghosts
   const [isGlitching, setIsGlitching] = useState(false);
+
+  // The resurrection state - triggers when pet comes back from GHOST
+  const [isResurrecting, setIsResurrecting] = useState(false);
+  const [showResurrectMessage, setShowResurrectMessage] = useState(false);
+
+  // Track previous stage to detect resurrection
+  const [prevStage, setPrevStage] = useState<Stage>(stage);
+  const [prevDeathCount, setPrevDeathCount] = useState<number>(deathCount);
 
   // The ghost glitch ritual - triggers randomly from beyond the veil
   useEffect(() => {
@@ -235,6 +265,32 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
     return () => clearTimeout(timeout);
   }, [stage]);
 
+  // Detect resurrection - when pet was GHOST and is no longer GHOST, or death count increased
+  useEffect(() => {
+    const wasGhost = prevStage === Stage.GHOST;
+    const isAlive = stage !== Stage.GHOST && health > 0;
+    const deathCountIncreased = deathCount > prevDeathCount;
+
+    if ((wasGhost && isAlive) || deathCountIncreased) {
+      console.log('🦇 RESURRECTION DETECTED!');
+      setIsResurrecting(true);
+      setShowResurrectMessage(true);
+
+      // Animation lasts 1.5 seconds
+      setTimeout(() => {
+        setIsResurrecting(false);
+      }, 1500);
+
+      // Message lasts 3 seconds
+      setTimeout(() => {
+        setShowResurrectMessage(false);
+      }, 3000);
+    }
+
+    setPrevStage(stage);
+    setPrevDeathCount(deathCount);
+  }, [stage, health, deathCount, prevStage, prevDeathCount]);
+
   // Determining the visual manifestation
   const visual = getStageVisual(stage, mood);
   const stageName = getStageName(stage);
@@ -242,6 +298,7 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
 
   // Conjuring the animation class based on the pet's state
   const getAnimationClass = (): string => {
+    if (isResurrecting) return 'animate-resurrect';
     if (stage === Stage.GHOST && isGlitching) return 'animate-glitch';
     if (mood === Mood.HUNGRY) return 'animate-shake';
     if (mood !== Mood.DEAD) return 'animate-breathing';
@@ -257,7 +314,16 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green glow-border">
+    <div className={`flex flex-col h-full bg-crypt-dark border-2 border-terminal-green glow-border relative ${isResurrecting ? 'flash-bg' : ''}`}>
+      {/* Resurrection message overlay */}
+      {showResurrectMessage && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 pointer-events-none">
+          <div className="text-terminal-green text-2xl font-bold pixelated text-glow animate-pulse">
+            ⚡ RESURRECTED ⚡
+          </div>
+        </div>
+      )}
+
       {/* The crypt keeper's header */}
       <div className="px-2 py-1 border-b-2 border-terminal-green bg-panel-bg">
         <h2 className="text-terminal-green text-xs font-bold pixelated text-glow whitespace-nowrap">
@@ -271,8 +337,8 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
       {/* The manifestation chamber */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 space-y-4">
         {/* The pet's visual form - pixel art summoned from the void */}
-        <div 
-          className={`flex items-center justify-center pet-glow ${getAnimationClass()}`} 
+        <div
+          className={`flex items-center justify-center pet-glow ${getAnimationClass()}`}
           style={{ imageRendering: 'pixelated' }}
         >
           {visual}

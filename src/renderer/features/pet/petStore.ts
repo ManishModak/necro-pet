@@ -38,6 +38,7 @@ export interface CommitState {
   lastCommitDate: string | null;   // ISO timestamp of last commit
   lastCommitHash: string | null;   // Hash of last commit
   deathCount: number;              // How many times the pet has perished
+  watchedProjectPath: string | null; // Path to the git repository being watched
 }
 
 // Actions to manipulate the pet's existence
@@ -69,6 +70,7 @@ export interface CommitActions {
     lastCommitDate: string | null;
     lastCommitHash: string | null;
     deathCount: number;
+    watchedProjectPath: string | null;
   }) => void;
 }
 
@@ -84,7 +86,7 @@ export const calculateStage = (xp: number, health: number): Stage => {
   if (health === 0) {
     return Stage.GHOST;
   }
-  
+
   // The living evolve through XP thresholds
   if (xp <= 10) {
     return Stage.EGG;
@@ -111,7 +113,7 @@ export const calculateDecay = (hoursSinceCommit: number): number => {
   if (hoursSinceCommit <= 24) return 0;           // Grace period - Day 1
   if (hoursSinceCommit <= 48) return 15;          // Day 2
   if (hoursSinceCommit <= 72) return 40;          // Day 3 (15 + 25)
-  
+
   // Day 4+: 40 + 35 per additional day
   const additionalDays = Math.floor((hoursSinceCommit - 72) / 24);
   return 40 + (additionalDays * 35);
@@ -120,12 +122,12 @@ export const calculateDecay = (hoursSinceCommit: number): number => {
 // Pure function: Calculate revival health based on commit message
 export const calculateRevivalHealth = (commitMessage: string): number => {
   const lowerMessage = commitMessage.toLowerCase();
-  
+
   // Special resurrection commit gives 75% health
   if (lowerMessage.includes('resurrect')) {
     return 75;
   }
-  
+
   // Normal revival gives 50% health
   return 50;
 };
@@ -137,15 +139,16 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
   xp: 0,
   stage: Stage.EGG,
   mood: Mood.HAPPY,
-  
+
   // Initial world context - clear skies and daylight
   weather: 'CLEAR',
   isNight: false,
-  
+
   // Initial commit state - no offerings yet
   lastCommitDate: null,
   lastCommitHash: null,
   deathCount: 0,
+  watchedProjectPath: null,
 
   // Decrease health - the decay of life
   decreaseHealth: (amount: number) => set((state) => {
@@ -186,35 +189,38 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
     isNight: false,
     lastCommitDate: null,
     lastCommitHash: null,
-    deathCount: 0
+    deathCount: 0,
+    watchedProjectPath: null
   }),
-  
+
   // Set weather - change the atmospheric conditions
   setWeather: (weather: WeatherState) => set({ weather }),
-  
+
   // Set night mode - toggle between day and night
   setIsNight: (isNight: boolean) => set({ isNight }),
-  
+
   // Feed from commit - the primary source of sustenance
   feedFromCommit: (hash: string, message: string, timestamp: number) => set((state) => {
     // If pet is dead, revive it instead
     if (state.health === 0) {
       const revivalHealth = calculateRevivalHealth(message);
+      const newXP = 0; // Reset XP on revival
+
       return {
         health: revivalHealth,
-        xp: state.xp + 15,
-        stage: calculateStage(state.xp + 15, revivalHealth),
+        xp: newXP,
+        stage: calculateStage(newXP, revivalHealth),
         mood: calculateMood(revivalHealth),
         lastCommitDate: new Date(timestamp).toISOString(),
         lastCommitHash: hash,
         deathCount: state.deathCount + 1
       };
     }
-    
+
     // Normal feeding - +20 HP, +15 XP
     const newHealth = clampHealth(state.health + 20);
     const newXP = state.xp + 15;
-    
+
     return {
       health: newHealth,
       xp: newXP,
@@ -224,12 +230,12 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
       lastCommitHash: hash
     };
   }),
-  
+
   // Apply time decay - the slow death from neglect
   applyTimeDecay: (hoursSinceCommit: number) => set((state) => {
     const decay = calculateDecay(hoursSinceCommit);
     if (decay === 0) return state;
-    
+
     const newHealth = clampHealth(state.health - decay);
     return {
       health: newHealth,
@@ -237,20 +243,23 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
       mood: calculateMood(newHealth)
     };
   }),
-  
+
   // Revive pet - resurrection from the void
   revivePet: (commitMessage: string) => set((state) => {
     if (state.health > 0) return state; // Already alive
-    
+
     const revivalHealth = calculateRevivalHealth(commitMessage);
+    const newXP = 0; // Reset XP on revival
+
     return {
       health: revivalHealth,
-      stage: calculateStage(state.xp, revivalHealth),
+      xp: newXP,
+      stage: calculateStage(newXP, revivalHealth),
       mood: calculateMood(revivalHealth),
       deathCount: state.deathCount + 1
     };
   }),
-  
+
   // Load from save - restore the pet's soul from the crypt
   loadFromSave: (data) => set({
     health: data.health,
@@ -261,6 +270,7 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
     isNight: data.isNight,
     lastCommitDate: data.lastCommitDate,
     lastCommitHash: data.lastCommitHash,
-    deathCount: data.deathCount
+    deathCount: data.deathCount,
+    watchedProjectPath: data.watchedProjectPath
   })
 }));

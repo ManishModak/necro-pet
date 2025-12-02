@@ -21,7 +21,7 @@ export const DebugPanel: React.FC = () => {
   const reset = usePetStore((state) => state.reset);
 
   const weatherOptions: WeatherState[] = ['CLEAR', 'RAIN', 'SNOW', 'STORM'];
-  
+
   // Calculate hours since last commit
   const getHoursSinceCommit = (): string => {
     if (!lastCommitDate) return 'Never';
@@ -30,7 +30,7 @@ export const DebugPanel: React.FC = () => {
     if (hours < 24) return `${Math.floor(hours)}h ago`;
     return `${Math.floor(hours / 24)}d ${Math.floor(hours % 24)}h ago`;
   };
-  
+
   // Simulate a commit
   const simulateCommit = () => {
     feedFromCommit(
@@ -39,7 +39,7 @@ export const DebugPanel: React.FC = () => {
       Date.now()
     );
   };
-  
+
   // Simulate a resurrection commit
   const simulateResurrect = () => {
     feedFromCommit(
@@ -48,7 +48,7 @@ export const DebugPanel: React.FC = () => {
       Date.now()
     );
   };
-  
+
   // Simulate 24 hours passing
   const simulateDayPass = () => {
     applyTimeDecay(48); // Apply 48 hours of decay (15 HP)
@@ -57,7 +57,7 @@ export const DebugPanel: React.FC = () => {
   return (
     <div className="fixed bottom-2 right-2 bg-panel-bg border-2 border-terminal-green p-2 z-[9999] text-xs">
       <div className="text-terminal-green font-bold mb-2">🔮 DEBUG PANEL</div>
-      
+
       {/* Weather Controls */}
       <div className="mb-2">
         <span className="text-terminal-green">Weather: </span>
@@ -66,11 +66,10 @@ export const DebugPanel: React.FC = () => {
             <button
               key={w}
               onClick={() => setWeather(w)}
-              className={`px-2 py-1 border ${
-                weather === w 
-                  ? 'bg-terminal-green text-crypt-dark' 
-                  : 'border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-crypt-dark'
-              }`}
+              className={`px-2 py-1 border ${weather === w
+                ? 'bg-terminal-green text-crypt-dark'
+                : 'border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-crypt-dark'
+                }`}
             >
               {w}
             </button>
@@ -82,11 +81,10 @@ export const DebugPanel: React.FC = () => {
       <div className="mb-2">
         <button
           onClick={() => setIsNight(!isNight)}
-          className={`px-2 py-1 border ${
-            isNight 
-              ? 'bg-ghostly-blue text-crypt-dark' 
-              : 'border-ghostly-blue text-ghostly-blue hover:bg-ghostly-blue hover:text-crypt-dark'
-          }`}
+          className={`px-2 py-1 border ${isNight
+            ? 'bg-ghostly-blue text-crypt-dark'
+            : 'border-ghostly-blue text-ghostly-blue hover:bg-ghostly-blue hover:text-crypt-dark'
+            }`}
         >
           {isNight ? '🌙 NIGHT' : '☀️ DAY'}
         </button>
@@ -119,7 +117,36 @@ export const DebugPanel: React.FC = () => {
           +15
         </button>
       </div>
-      
+
+      {/* Save File Info */}
+      <div className="mb-2 text-terminal-green text-[10px] opacity-70 break-all">
+        📁 ~/.necro-pet/save.json
+      </div>
+
+      {/* Watched Directory Info */}
+      <div className="mb-2 pb-2 border-b border-terminal-green">
+        <div className="text-terminal-green text-[10px] opacity-70 mb-1">
+          Watching:
+        </div>
+        <div className="text-terminal-green text-[9px] break-all mb-1 font-mono">
+          {usePetStore.getState().watchedProjectPath || 'Not set'}
+        </div>
+        <button
+          onClick={async () => {
+            const path = await window.electronAPI.selectDirectory();
+            if (path) {
+              console.log('🦇 New watch path selected:', path);
+              // Save the new path and reload app
+              window.electronAPI.saveData({ watchedProjectPath: path });
+              alert(`Watching: ${path}\n\nPlease restart the app for changes to take effect.`);
+            }
+          }}
+          className="w-full px-2 py-1 border border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-crypt-dark text-[10px]"
+        >
+          📂 CHANGE DIRECTORY
+        </button>
+      </div>
+
       {/* Commit Info */}
       <div className="mb-2 border-t border-terminal-green pt-2">
         <div className="text-terminal-green text-xs mb-1">
@@ -128,7 +155,7 @@ export const DebugPanel: React.FC = () => {
         <div className="text-terminal-green text-xs mb-2">
           Deaths: {deathCount} 💀
         </div>
-        
+
         {/* Commit Simulation */}
         <div className="flex gap-1 mb-2">
           <button
@@ -144,7 +171,7 @@ export const DebugPanel: React.FC = () => {
             ⚡ RESURRECT
           </button>
         </div>
-        
+
         {/* Time Simulation */}
         <button
           onClick={simulateDayPass}

@@ -15,6 +15,7 @@ export interface SaveData {
   lastCommitDate: string | null;  // ISO timestamp
   lastCommitHash: string | null;
   deathCount: number;
+  watchedProjectPath: string | null;  // Path to the git repo being watched
   createdAt: string;
   updatedAt: string;
 }
@@ -31,6 +32,7 @@ const DEFAULT_SAVE_DATA: SaveData = {
   lastCommitDate: null,
   lastCommitHash: null,
   deathCount: 0,
+  watchedProjectPath: null,  // Will be set on first run
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString()
 };
@@ -60,26 +62,26 @@ const ensureSaveDir = (): void => {
 // Load the pet's soul from the void
 export const loadSaveData = (): SaveData | null => {
   const savePath = getSavePath();
-  
+
   try {
     if (!fs.existsSync(savePath)) {
       console.log('🦇 No save file found. A new pet shall be summoned...');
       return null;
     }
-    
+
     const rawData = fs.readFileSync(savePath, 'utf-8');
     const data = JSON.parse(rawData) as SaveData;
-    
+
     // Validate the save data has required fields
     if (typeof data.health !== 'number' || typeof data.xp !== 'number') {
       console.warn('🦇 Save file corrupted! The soul is malformed...');
       backupCorruptedSave(savePath);
       return null;
     }
-    
+
     console.log('🦇 Pet soul loaded from the crypt:', savePath);
     return data;
-    
+
   } catch (error) {
     console.error('🦇 Failed to load save file:', error);
     backupCorruptedSave(savePath);
@@ -91,22 +93,22 @@ export const loadSaveData = (): SaveData | null => {
 export const saveSaveData = (data: Partial<SaveData>): void => {
   ensureSaveDir();
   const savePath = getSavePath();
-  
+
   try {
     // Load existing data or use defaults
     let existingData = loadSaveData() || { ...DEFAULT_SAVE_DATA };
-    
+
     // Merge with new data
     const saveData: SaveData = {
       ...existingData,
       ...data,
       updatedAt: new Date().toISOString()
     };
-    
+
     // Write to the crypt
     fs.writeFileSync(savePath, JSON.stringify(saveData, null, 2), 'utf-8');
     console.log('🦇 Pet soul saved to the crypt');
-    
+
   } catch (error) {
     console.error('🦇 Failed to save pet soul:', error);
   }
@@ -116,20 +118,20 @@ export const saveSaveData = (data: Partial<SaveData>): void => {
 export const createNewSave = (): SaveData => {
   ensureSaveDir();
   const savePath = getSavePath();
-  
+
   const newSave: SaveData = {
     ...DEFAULT_SAVE_DATA,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
-  
+
   try {
     fs.writeFileSync(savePath, JSON.stringify(newSave, null, 2), 'utf-8');
     console.log('🦇 New pet summoned and saved to:', savePath);
   } catch (error) {
     console.error('🦇 Failed to create new save:', error);
   }
-  
+
   return newSave;
 };
 
@@ -151,7 +153,7 @@ export const getHoursSinceLastCommit = (lastCommitDate: string | null): number =
   if (!lastCommitDate) {
     return Infinity; // No commits ever = infinite time
   }
-  
+
   const lastCommit = new Date(lastCommitDate);
   const now = new Date();
   const diffMs = now.getTime() - lastCommit.getTime();
@@ -163,7 +165,7 @@ export const calculateDecay = (hoursSinceCommit: number): number => {
   if (hoursSinceCommit <= 24) return 0;           // Grace period - Day 1
   if (hoursSinceCommit <= 48) return 15;          // Day 2
   if (hoursSinceCommit <= 72) return 40;          // Day 3 (15 + 25)
-  
+
   // Day 4+: 40 + 35 per additional day
   const additionalDays = Math.floor((hoursSinceCommit - 72) / 24);
   return 40 + (additionalDays * 35);

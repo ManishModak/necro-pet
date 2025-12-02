@@ -1,67 +1,40 @@
-// The Game Loop - where time itself feeds or starves our creature...
+// The Game Loop - where file events provide visual feedback only...
 import { useEffect } from 'react';
-import { usePetStore } from './petStore';
 
-// Configuration for the game loop's dark rituals
-export interface GameLoopConfig {
-  decayIntervalMs?: number;  // Default: 60000 (60 seconds) - the sands of time
-  decayAmount?: number;      // Default: 1 - the toll of existence
-  healthGain?: number;       // Default: 5 - the vitality from coding
-  xpGain?: number;           // Default: 1 - the essence accumulated
-}
+// NOTE: The game loop no longer handles feeding or decay.
+// Feeding is done through git commits (see feedFromCommit in petStore.ts)
+// Decay is calculated on app startup based on time since last commit (see persistence.ts)
 
-// The hook that binds time and events to our pet's fate
-export const useGameLoop = (config?: GameLoopConfig): void => {
-  const {
-    decayIntervalMs = 60000,  // 60 seconds - the default decay cycle
-    decayAmount = 1,
-    healthGain = 5,
-    xpGain = 1,
-  } = config || {};
+// The hook that binds file events to visual feedback
+export const useGameLoop = (): void => {
 
   useEffect(() => {
-    // Summoning the store actions from the void
-    const { decreaseHealth, increaseHealth, increaseXP } = usePetStore.getState();
+    // NOTE: The decay timer has been removed - time-based decay is now calculated
+    // on app startup based on time since last commit (see persistence.ts)
 
-    // The decay timer - entropy claims all things
-    console.log('🦇 Starting the decay timer... Time hungers for life force.');
-    const decayTimer = setInterval(() => {
-      console.log(`🦇 Decay strikes! Draining ${decayAmount} health...`);
-      decreaseHealth(decayAmount);
-      
-      // Check if death has claimed our companion
-      const currentHealth = usePetStore.getState().health;
-      if (currentHealth === 0) {
-        console.log('💀 The pet has crossed into the shadow realm...');
-      }
-    }, decayIntervalMs);
-
-    // The file change listener - coding activity feeds the beast
+    // The file change listener - provides visual feedback only (no HP/XP gain)
+    // Commits are now the primary food source!
     const handleFileChanged = (event: { type: string; path: string; timestamp: number }) => {
-      console.log(`🦇 File changed detected: ${event.path} - Feeding the creature!`);
-      increaseHealth(healthGain);
-      increaseXP(xpGain);
-      
-      const state = usePetStore.getState();
-      console.log(`🦇 Pet fed! Health: ${state.health}, XP: ${state.xp}, Stage: ${state.stage}`);
+      console.log(`🦇 File changed detected: ${event.path} - Visual feedback only, no feeding.`);
+      // TODO: Add subtle visual feedback animation here in the future
+      // For now, the activity log entry is the visual feedback
     };
 
     // Subscribing to the whispers from the crypt
     if (window.electronAPI) {
-      console.log('🦇 Listening for file changes from the crypt...');
+      console.log('🦇 Listening for file changes from the crypt (visual feedback only)...');
       window.electronAPI.onFileChanged(handleFileChanged);
     } else {
       console.warn('🦇 The bridge to the crypt is broken! No file events will reach us.');
     }
 
-    // The cleanup ritual - banishing timers and listeners when the séance ends
+    // The cleanup ritual - banishing listeners when the séance ends
     return () => {
-      console.log('🦇 Ending the game loop... Silencing the decay timer and file listeners.');
-      clearInterval(decayTimer);
-      
+      console.log('🦇 Ending the game loop... Silencing file listeners.');
+
       if (window.electronAPI) {
         window.electronAPI.removeFileListeners();
       }
     };
-  }, [decayIntervalMs, decayAmount, healthGain, xpGain]);
+  }, []);
 };

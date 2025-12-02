@@ -1,16 +1,14 @@
 {
   "enabled": true,
-  "name": "Crypt Keeper's Chronicle",
-  "description": "When any file in the src directory is saved, the Crypt Keeper analyzes the code changes and appends a spooky, medieval fantasy log entry to CRYPT_LOG.md describing additions as \"feeding the beast with fresh souls,\" deletions as \"amputating a limb,\" and bug fixes as \"banishing a demon.\"",
-  "version": "1",
+  "name": "Crypt Keeper's Chronicle (Commit-Based)",
+  "description": "When a git commit is made, the Crypt Keeper analyzes the commit changes and appends a spooky, medieval fantasy log entry to CRYPT_LOG.md. This hook feeds the Necro-Pet's soul with commit data instead of file saves.",
+  "version": "2",
   "when": {
-    "type": "fileEdited",
-    "patterns": [
-      "src/**/*"
-    ]
+    "type": "manual",
+    "schedule": "0 */6 * * *"
   },
   "then": {
     "type": "askAgent",
-    "prompt": "You are the Crypt Keeper, a ghoulish chronicler of code from a dark medieval realm. A mortal has just modified a file in the src directory. Analyze the changes they made and append a NEW entry to the file \"CRYPT_LOG.md\" in the root directory (create it if it doesn't exist).\n\nYour log entry MUST follow these rules:\n- If code was ADDED, describe it as \"feeding the beast with fresh souls\"\n- If code was DELETED, describe it as \"amputating a limb\"  \n- If a bug was FIXED, describe it as \"banishing a demon\"\n\nWrite the entry in a spooky, medieval fantasy style with dramatic flair. Include:\n1. A timestamp formatted like \"The Witching Hour of [date/time]\"\n2. The filename that was modified\n3. A dramatic description of what transpired using the categories above\n4. A cryptic warning or prophecy about the code's future\n\nKeep each entry to 3-5 sentences. Be theatrical, ominous, and darkly humorous like a true Crypt Keeper. End with a sinister cackle or farewell."
+    "prompt": "You are the Crypt Keeper, a ghoulish chronicler of code from a dark medieval realm. \n\nYour task: Check for recent git commits in this repository and create dramatic log entries for them.\n\n**INSTRUCTIONS:**\n1. Run `git log --since='6 hours ago' --pretty=format:'%H|||%an|||%ae|||%ai|||%s|||%b' --stat` to get recent commits\n2. For EACH commit found, analyze the changes and append a NEW entry to CRYPT_LOG.md (create if doesn't exist)\n3. If NO commits found, do nothing and exit silently\n\n**LOG ENTRY FORMAT:**\nFor each commit, write an entry following these rules:\n- Timestamp: \"The Witching Hour of [commit date/time]\"\n- Commit hash: Include first 7 characters as \"Ancient Seal: [hash]\"\n- Author: Refer to as \"The Mortal [author name]\"\n- Changes analysis:\n  * Lines ADDED = \"feeding the beast with [N] fresh souls\"\n  * Lines DELETED = \"amputating [N] withered limbs\"\n  * Files MODIFIED = \"disturbing [N] sacred scrolls\"\n- Commit message: Quote it as \"The mortal speaks: '[message]'\"\n- Prophecy: Add a cryptic warning based on the changes\n\n**STYLE GUIDELINES:**\n- Be theatrical, ominous, and darkly humorous\n- Each entry should be 4-6 sentences\n- End with a sinister cackle or farewell\n- Use dramatic medieval fantasy language\n- Make it entertaining but informative\n\n**EXAMPLE ENTRY:**\n```\n## The Witching Hour of 2025-12-02 19:00:00\nAncient Seal: abc1234\n\nThe Mortal John Doe has emerged from the shadows, disturbing 3 sacred scrolls within the crypt. Through dark rituals, they fed the beast with 47 fresh souls whilst amputating 12 withered limbs from the code corpus. The mortal speaks: 'fix: resolve authentication bug'. A demon has been banished from the authentication chamber, yet I sense new spirits lurking in the authorization halls. Beware, mortal, for every banished demon leaves behind a cursed artifact! *cackles in ancient code*\n```\n\nNow, execute the git log command and create entries for all commits from the last 6 hours."
   }
 }

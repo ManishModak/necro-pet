@@ -27,13 +27,30 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
   };
 
   // Get spooky icon for event type
-  const getEventIcon = (type: 'file:changed' | 'file:added'): string => {
-    return type === 'file:changed' ? '👻' : '🦇';
+  const getEventIcon = (type: 'file:changed' | 'file:added' | 'commit' | 'resurrection'): string => {
+    switch (type) {
+      case 'commit': return '🔮';
+      case 'resurrection': return '⚡';
+      case 'file:added': return '🦇';
+      case 'file:changed': return '👻';
+      default: return '👻';
+    }
   };
 
   // Get spooky label for event type
-  const getEventLabel = (type: 'file:changed' | 'file:added'): string => {
-    return type === 'file:changed' ? 'DISTURBED' : 'SUMMONED';
+  const getEventLabel = (type: 'file:changed' | 'file:added' | 'commit' | 'resurrection'): string => {
+    switch (type) {
+      case 'commit': return 'FED';
+      case 'resurrection': return 'RESURRECTED';
+      case 'file:added': return 'SUMMONED';
+      case 'file:changed': return 'DISTURBED';
+      default: return 'DISTURBED';
+    }
+  };
+
+  // Get formatted path/message
+  const getDisplayPath = (path: string): string => {
+    return path.replace('COMMIT: ', '');
   };
 
   return (
@@ -78,7 +95,7 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
                     </span>
                   </div>
                   <div className="text-terminal-green text-xs break-all">
-                    {entry.path}
+                    {getDisplayPath(entry.path)}
                   </div>
                 </div>
               </div>
