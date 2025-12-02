@@ -32,13 +32,13 @@ function App() {
     // Binding the file:changed whispers from the main process
     window.electronAPI.onFileChanged((event) => {
       console.log('👻 Spirit disturbed:', event.path);
-      addEntry(event);
+      // Visual feedback only - no longer logging to activity log
     });
 
     // Binding the file:added summonings from the main process
     window.electronAPI.onFileAdded((event) => {
       console.log('🦇 New spirit summoned:', event.path);
-      addEntry(event);
+      // Visual feedback only - no longer logging to activity log
     });
 
     // Binding the commit offerings from the Git Oracle

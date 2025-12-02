@@ -3,7 +3,7 @@ import { create } from 'zustand';
 
 export interface ActivityLogEntry {
   id: string;
-  type: 'file:changed' | 'file:added' | 'commit' | 'resurrection';
+  type: 'commit' | 'resurrection';
   path: string;
   timestamp: number;
 }

@@ -27,24 +27,20 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
   };
 
   // Get spooky icon for event type
-  const getEventIcon = (type: 'file:changed' | 'file:added' | 'commit' | 'resurrection'): string => {
+  const getEventIcon = (type: 'commit' | 'resurrection'): string => {
     switch (type) {
       case 'commit': return '🔮';
       case 'resurrection': return '⚡';
-      case 'file:added': return '🦇';
-      case 'file:changed': return '👻';
-      default: return '👻';
+      default: return '🔮';
     }
   };
 
   // Get spooky label for event type
-  const getEventLabel = (type: 'file:changed' | 'file:added' | 'commit' | 'resurrection'): string => {
+  const getEventLabel = (type: 'commit' | 'resurrection'): string => {
     switch (type) {
       case 'commit': return 'FED';
       case 'resurrection': return 'RESURRECTED';
-      case 'file:added': return 'SUMMONED';
-      case 'file:changed': return 'DISTURBED';
-      default: return 'DISTURBED';
+      default: return 'FED';
     }
   };
 
