@@ -61,3 +61,86 @@
     z-index: 9999;
   }
 }
+
+
+/* Resize handles for frameless window - invisible but functional */
+@layer components {
+  .resize-handle {
+    position: fixed;
+    z-index: 10000;
+  }
+  
+  /* Edge handles - 6px wide strips along edges */
+  .resize-top {
+    top: 0;
+    left: 10px;
+    right: 10px;
+    height: 6px;
+    cursor: n-resize;
+    -webkit-app-region: no-drag;
+  }
+  
+  .resize-bottom {
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 6px;
+    cursor: s-resize;
+    -webkit-app-region: no-drag;
+  }
+  
+  .resize-left {
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 6px;
+    cursor: w-resize;
+    -webkit-app-region: no-drag;
+  }
+  
+  .resize-right {
+    right: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 6px;
+    cursor: e-resize;
+    -webkit-app-region: no-drag;
+  }
+  
+  /* Corner handles - 10x10px squares in corners */
+  .resize-top-left {
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    cursor: nw-resize;
+    -webkit-app-region: no-drag;
+  }
+  
+  .resize-top-right {
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    cursor: ne-resize;
+    -webkit-app-region: no-drag;
+  }
+  
+  .resize-bottom-left {
+    bottom: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    cursor: sw-resize;
+    -webkit-app-region: no-drag;
+  }
+  
+  .resize-bottom-right {
+    bottom: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    cursor: se-resize;
+    -webkit-app-region: no-drag;
+  }
+}

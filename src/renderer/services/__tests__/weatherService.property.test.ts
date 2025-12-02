@@ -3,7 +3,7 @@
 
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
-import { mapWMOCodeToWeather, WeatherState } from '../weatherService';
+import { mapWMOCodeToWeather } from '../weatherService';
 
 describe('Weather Service Property Tests', () => {
   it('Property 1: For any WMO code (0-99), mapWMOCodeToWeather SHALL return a valid WeatherState', () => {

@@ -4,31 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
 
-// Mock BrowserWindow for testing
-class MockBrowserWindow {
-  private width: number;
-  private height: number;
-  private x: number = 0;
-  private y: number = 0;
-
-  constructor(width: number, height: number) {
-    this.width = width;
-    this.height = height;
-  }
-
-  getSize(): [number, number] {
-    return [this.width, this.height];
-  }
-
-  setPosition(x: number, y: number): void {
-    this.x = x;
-    this.y = y;
-  }
-
-  getPosition(): [number, number] {
-    return [this.x, this.y];
-  }
-}
+// Mock BrowserWindow kept for potential future use in integration tests
 
 // The positioning logic extracted for testing
 const calculateBottomRightPosition = (

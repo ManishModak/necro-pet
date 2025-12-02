@@ -1,5 +1,5 @@
 // The Crypt's messenger - broadcasting whispers to the séance chamber...
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow } from 'electron';
 
 // The sacred contract for file events
 export interface FileEvent {

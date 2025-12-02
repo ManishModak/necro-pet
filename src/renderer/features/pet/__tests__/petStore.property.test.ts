@@ -17,7 +17,7 @@ import {
   Stage,
   Mood
 } from '../petStore';
-import { WeatherState } from '../../../services/weatherService';
+// WeatherState type used implicitly via store methods
 
 describe('Pet Store Property Tests', () => {
   beforeEach(() => {

@@ -223,7 +223,7 @@ describe('File Event Emission Property Tests', () => {
         fc.constantFrom(...IGNORED_PATTERNS),
         fc.stringMatching(/^[a-zA-Z0-9_-]+\.(js|ts|json|md)$/),
         fc.constantFrom('file:changed', 'file:added'),
-        (ignoredDir, filename, eventType) => {
+        (ignoredDir, filename, _eventType) => {
           const filePath = `src/${ignoredDir}/${filename}`;
           
           // Property: Files in ignored directories should be filtered

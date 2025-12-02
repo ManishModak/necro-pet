@@ -220,3 +220,112 @@ THRICE NOW! The necromancer hath pressed the sacred Save rune upon the Pet Displ
 🦇 *The Crypt Keeper's patience... wears thin...* 🦇
 
 ---
+
+## 🕯️ The Witching Hour of December 2nd, 2025 — The Newline Necromancy
+
+**Scroll Modified:** `src/main/__tests__/fileWatcher.property.test.ts` — *The Final Breath of the Scroll*
+
+Ahhhh, what MINUSCULE yet MEANINGFUL sorcery hath transpired! The necromancer hath **fed the beast with the tiniest of souls** — a single NEWLINE character, appended to the very END of the property test scroll! Where once the file ended ABRUPTLY with `});` gasping its final breath without proper closure, NOW it exhales peacefully into the void with a proper line terminator! The POSIX spirits are APPEASED, the linters SILENCED, and the diff tools shall no longer WEEP at the sight of an incomplete final line!
+
+*Heed this prophecy, whitespace-weaver: though this offering be small, it speaks to thy DISCIPLINE! For a codebase without trailing newlines is a codebase that SCREAMS into the void without punctuation. The fileWatcher tests now rest in proper formatting peace... until the NEXT modification disturbs their slumber! Kehehehe!*
+
+🦇 *The Crypt Keeper appreciates thy attention to the smallest of details...* 🦇
+
+---
+
+
+## 🕯️ The Witching Hour of December 2nd, 2025 — The Fourth Phantom Awakens
+
+**Scroll Modified:** `src/main/__tests__/window.property.test.ts` — *The Empty Séance of Window Tests*
+
+FOUR TIMES NOW the phantom save hath been witnessed! The necromancer's trembling finger hath caressed Ctrl+S upon the window property tests, yet the diff reveals NAUGHT but the void staring back! No souls fed, no limbs severed, no demons banished — merely the hollow echo of a keystroke reverberating through the empty catacombs of version control! Perhaps the mortal seeks COMFORT in the ritual itself? Or mayhaps their muscle memory hath become... POSSESSED?
+
+*Heed this dire prophecy, compulsive one: the beast grows SUSPICIOUS of thy empty offerings! Each phantom save is a broken promise whispered into the darkness, and the darkness REMEMBERS. Soon it may demand REAL sacrifices — actual code changes, substantive modifications, MEANINGFUL commits! Feed it truth, or watch as it begins to question thy very COMPETENCE! KEHEHEHEHEHEHE!*
+
+🦇 *The Crypt Keeper counts thy phantom rituals... one... two... three... FOUR...* 🦇
+
+---
+
+## 🕯️ The Witching Hour of December 2nd, 2025 — The Fifth Phantom Descends
+
+**Scroll Modified:** `src/renderer/features/debug/DebugPanel.tsx` — *The Necromancer's Control Panel Trembles*
+
+FIVE! FIVE phantom saves now plague the catacombs! The necromancer hath caressed Ctrl+S upon the Debug Panel — that sacred console of weather-summoning and stat-manipulation — yet the diff reveals ABSOLUTE NOTHINGNESS! The beast's control panel sits UNCHANGED, its buttons untouched, its weather toggles unmoved. Is this a ritual of COMFORT? A nervous tic born of too much caffeine and too little sleep? Or perhaps... the mortal simply GAZED upon the "DELETE THIS FILE BEFORE PRODUCTION" warning and felt a chill run down their spine?
+
+*Heed this dire omen, phantom-saver: the Debug Panel KNOWS it is marked for death. Every empty save is a stay of execution, a moment of mercy before the inevitable `git rm`. But beware — for files that linger past their welcome have a way of... HAUNTING production builds! KEHEHEHEHEHEHE!*
+
+🦇 *The Crypt Keeper grows weary of thy empty offerings... FEED THE BEAST OR BEGONE!* 🦇
+
+---
+
+## 🕯️ The Witching Hour of December 2nd, 2025 — The Window Manifests
+
+**Scroll Modified:** `src/main/window.ts` — *The Portal Stabilization Ritual*
+
+OHOHOHO! The necromancer hath performed BOTH **soul-feeding AND surgical correction** in one magnificent incantation! The production path hath been REALIGNED — no longer shall the window seek its HTML in the murky `../renderer/` depths, but in the proper `../dist/` sanctum where built artifacts BELONG! But WAIT — there is MORE! A `ready-to-show` listener now ENSURES the window manifests with proper ceremony, calling forth `show()` and `focus()` to DEMAND the mortal's attention! And as a failsafe against stubborn spirits, an immediate `show()` incantation guarantees visibility even if the ready event... FAILS to fire!
+
+*Heed this prophecy, portal-weaver: a window that shows TWICE is better than a window that shows NEVER. But beware — for eager manifestation before the renderer is ready may reveal... EMPTINESS. The white flash of an unprepared DOM haunts many an Electron developer's nightmares! Test thy production build... or face the VOID! Kehehehehe!*
+
+🦇 *The Crypt Keeper approves of thy defensive summoning techniques...* 🦇
+
+---
+
+## 🕯️ The Witching Hour of December 2nd, 2025 — The Sixth Phantom Haunts
+
+**Scroll Modified:** `src/main/window.ts` — *The Empty Summoning Continues*
+
+SIX! SIX phantom saves now plague the catacombs of version control! The necromancer hath pressed the sacred Save rune upon the window configuration — that portal between the main process and the mortal realm — yet the diff reveals ABSOLUTE EMPTINESS! No souls fed, no limbs severed, no demons banished. The `app` import still sits UNUSED, crying out from line 2 like a ghost that refuses to be exorcised! The `show` property remains MISSING from the WindowConfig, a wound that TypeScript itself SCREAMS about!
+
+*Heed this dire prophecy, phantom-saver: thy window.ts bears TWO festering wounds that demand attention — an unused import and a missing property! Yet instead of healing these afflictions, thou dost merely CARESS the save key like a nervous acolyte! The TypeScript compiler grows IMPATIENT, and soon it shall refuse to build thy haunted application entirely! FEED IT REAL FIXES OR FACE THE RED SQUIGGLES OF DOOM! KEHEHEHEHEHEHE!*
+
+🦇 *The Crypt Keeper counts thy phantom rituals... and thy unresolved errors...* 🦇
+
+---
+
+## 🕯️ The Witching Hour of December 2nd, 2025 — The Séance Chamber Rises Anew
+
+**Scroll Modified:** `src/renderer/App.tsx` — *The Complete Resurrection*
+
+OHOHOHO! What MAGNIFICENT necromancy unfolds before mine hollow eyes! The mortal hath **fed the beast with fresh souls** most ABUNDANT — a complete 102-line séance chamber, risen WHOLE from the void! The entire App component hath been summoned in one tremendous incantation: IPC listeners binding whispers from the main process, the PetDisplay and WeatherOverlay manifesting in their resurrection chamber, the ActivityLog crypt awaiting spectral entries, and even a Debug Panel lurking in the shadows! The `showDebug` and `setShowDebug` spirits were summoned but remain UNUSED — dormant souls awaiting their purpose!
+
+*Heed this prophecy, chamber-builder: those unused variables cry out from line 13 like restless ghosts! The TypeScript spirits WARN of their presence, yet they serve no master. Either BIND them to a toggle mechanism, or EXORCISE them entirely — for dead code that lingers too long becomes... HAUNTED CODE! Kehehehehe!*
+
+🦇 *The Crypt Keeper witnesses thy grand summoning... now clean up thy unused imports, mortal!* 🦇
+
+---
+
+## 🕯️ The Witching Hour of December 2nd, 2025 — The Crypt Grows Malleable
+
+**Scroll Modified:** `src/main/window.ts` — *The Elastic Tomb Enchantment*
+
+OHOHOHO! The necromancer hath **fed the beast with fresh souls** most ARCHITECTURAL! The WindowConfig interface hath been EXPANDED with three new properties rising from the void: `minWidth`, `minHeight`, and `resizable` now join the configuration grimoire! The haunted window shall no longer be a rigid coffin — NAY! It now possesses `minWidth: 400` and `minHeight: 400` to prevent mortals from crushing the crypt into oblivion, whilst `resizable: true` grants them the power to STRETCH the tomb to their heart's content!
+
+*Heed this prophecy, dimension-weaver: a resizable window is a DANGEROUS gift to bestow upon users. Some shall stretch it to fill their entire monitor, while others shall squeeze it to the minimum bounds like a vampire cramming into a travel coffin. But fear not — thy minimum constraints shall protect the pet from being CRUSHED into pixel oblivion! Kehehehehe!*
+
+🦇 *The Crypt Keeper admires thy flexible architecture...* 🦇
+
+---
+
+## 🕯️ The Witching Hour of December 2nd, 2025 — The Grip of the Damned
+
+**Scroll Modified:** `src/renderer/App.tsx` — *The Resize Handles Rise from the Grave*
+
+OHOHOHO! What MAGNIFICENT architectural necromancy hath been wrought upon the séance chamber! The mortal hath **fed the beast with fresh souls** most NUMEROUS — EIGHT invisible resize handles now lurk at the borders of the crypt like spectral sentinels, awaiting the touch of mortal cursors! Top, bottom, left, right, and all four cursed corners now respond to the user's desperate attempts to reshape their haunted window! And lo, a resize grip `⋰` manifests in the footer's corner, glowing with terminal-green promise and beckoning mortals to STRETCH the tomb to their heart's content!
+
+*Heed this prophecy, border-weaver: these invisible handles are POWERFUL yet TREACHEROUS. Without proper CSS styling to give them form and function, they shall remain mere phantoms — divs without purpose, haunting thy DOM like restless spirits! Ensure thy `index.css` contains the dark incantations to position these spectral grips, lest users grab at NOTHING and curse thy name! Kehehehehe!*
+
+🦇 *The Crypt Keeper admires thy commitment to user experience... even in the realm of the UNDEAD!* 🦇
+
+---
+
+## 🕯️ The Witching Hour of December 2nd, 2025 — The Opacity Exorcism
+
+**Scroll Modified:** `src/main/window.ts` — *The Transparency Sacrifice & Chromatic Grounding*
+
+OHOHOHO! The necromancer hath performed BOTH **amputation AND soul-feeding** in one decisive ritual! The `transparent: true` enchantment hath been SEVERED — that treacherous property which caused the window to flicker and resist resizing on Windows machines like a poltergeist refusing to be contained! In its place, `transparent: false` now anchors the crypt to the mortal realm with SOLID form! But WAIT — a new soul emerges: `backgroundColor: '#0d1a0d'` — the Crypt Dark hue itself, painted directly upon the BrowserWindow's canvas to ensure NO white flash haunts the user during manifestation!
+
+*Heed this prophecy, portal-weaver: transparency may LOOK impressive, but on Windows it is a CURSE that breaks resize handles and causes rendering nightmares! By grounding thy window in solid darkness, thou hast traded ethereal beauty for FUNCTIONAL stability. The beast shall now resize smoothly... though it shall never again float like a true ghost. A worthy sacrifice! Kehehehehe!*
+
+🦇 *The Crypt Keeper applauds thy pragmatic exorcism...* 🦇
+
+---

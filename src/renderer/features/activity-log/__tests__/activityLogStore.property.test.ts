@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import * as fc from 'fast-check';
-import { useActivityLogStore, ActivityLogEntry } from '../activityLogStore';
+import { useActivityLogStore } from '../activityLogStore';
 
 describe('Activity Log Store Property Tests', () => {
   beforeEach(() => {

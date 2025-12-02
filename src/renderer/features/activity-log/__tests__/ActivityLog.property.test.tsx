@@ -3,7 +3,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import * as fc from 'fast-check';
-import { render, screen, act } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { ActivityLog } from '../ActivityLog';
 import { useActivityLogStore } from '../activityLogStore';
 
