@@ -78,8 +78,8 @@ if (!gotTheLock) {
     // Awakening the file watcher to monitor the mortal realm
     initFileWatcher(watchPath);
 
-    // Awakening the Git Oracle to watch for commits
-    await initGitWatcher({ watchPath, pollInterval: 30000 });
+    // Awakening the Git Oracle to watch for commits (10s polling + file watching)
+    await initGitWatcher({ watchPath, pollInterval: 10000 });
 
     // On macOS, re-summon window when dock icon is clicked
     app.on('activate', () => {

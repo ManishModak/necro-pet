@@ -93,12 +93,17 @@ describe('Pet Revival Property Tests', () => {
         const store = usePetStore.getState();
         store.reset();
 
-        // Build to BEAST stage
+        // Build to evolution level 2 (BEAST stage) by accumulating 400+ XP (evolve at 200, reset, evolve again at 200)
+        for (let i = 0; i < 200; i++) {
+            store.increaseXP(1);
+        }
+        // First evolution at 200 XP -> LARVA, XP resets to 0
         for (let i = 0; i < 60; i++) {
             store.increaseXP(1);
         }
+        // Now at XP 60, evolutionLevel 1 (LARVA)
 
-        expect(usePetStore.getState().stage).toBe(Stage.BEAST);
+        expect(usePetStore.getState().stage).toBe(Stage.LARVA);
 
         // Kill the pet
         store.decreaseHealth(100);
@@ -136,7 +141,7 @@ describe('Pet Revival Property Tests', () => {
 
                     const state = usePetStore.getState();
 
-                    // Property: XP is reset to 0 + 15 from commit = 15
+                    // Property: XP after revival should be 15 (reset to 0, then +15 from feeding)
                     expect(state.xp).toBe(15);
 
                     // Property: Health is set to revival amount
@@ -146,9 +151,9 @@ describe('Pet Revival Property Tests', () => {
                     // Property: Death count is incremented
                     expect(state.deathCount).toBeGreaterThan(0);
 
-                    // Property: Stage is recalculated based on new XP (15) -> LARVA
-                    // 0-10 = EGG, 11-50 = LARVA
-                    expect(state.stage).toBe(Stage.LARVA);
+                    // Property: Stage is EGG (evolutionLevel 0) after revival
+                    // Revival resets evolutionLevel to 0, and 15 XP is still EGG (0-199 range)
+                    expect(state.stage).toBe(Stage.EGG);
                     expect(state.mood).not.toBe(Mood.DEAD);
                 }
             ),
@@ -179,8 +184,9 @@ describe('Pet Revival Property Tests', () => {
             // Revive
             store.feedFromCommit('hash', 'normal commit', Date.now());
 
-            // Property: Stage is always LARVA because XP resets to 0 + 15 = 15
-            expect(usePetStore.getState().stage).toBe(Stage.LARVA);
+            // Property: Stage is always EGG because revival resets evolutionLevel to 0
+            // and 15 XP is still in EGG range (0-199)
+            expect(usePetStore.getState().stage).toBe(Stage.EGG);
         });
     });
 

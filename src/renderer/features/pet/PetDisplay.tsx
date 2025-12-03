@@ -375,13 +375,13 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
                 ✨ XP
               </span>
               <span className="text-terminal-green text-xs pixelated whitespace-nowrap">
-                {xp}
+                {xp}/200
               </span>
             </div>
             <div className="w-full h-3 bg-panel-bg border border-terminal-green">
               <div
                 className="h-full bg-ghostly-blue transition-all duration-300"
-                style={{ width: `${Math.min(xp, 100)}%` }}
+                style={{ width: `${Math.min((xp / 200) * 100, 100)}%` }}
               />
             </div>
           </div>

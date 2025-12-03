@@ -44,15 +44,28 @@ function App() {
     // Binding the commit offerings from the Git Oracle
     window.electronAPI.onCommitDetected((event) => {
       console.log('🦇 Commit offering received:', event.message);
+
+      // Check if pet is dead before feeding
+      const wasDead = petState.health === 0;
+
       feedFromCommit(event.hash, event.message, event.timestamp);
 
-      const isResurrection = event.message.toLowerCase().includes('resurrect');
-
-      addEntry({
-        type: isResurrection ? 'resurrection' : 'commit',
-        path: event.message,
-        timestamp: event.timestamp
-      });
+      // Emit appropriate activity log entry
+      if (wasDead) {
+        // Pet was resurrected
+        addEntry({
+          type: 'resurrect',
+          path: `RESURRECTED: ${event.message}`,
+          timestamp: event.timestamp
+        });
+      } else {
+        // Pet was fed
+        addEntry({
+          type: 'feed',
+          path: `FED: ${event.message}`,
+          timestamp: event.timestamp
+        });
+      }
     });
 
     // Binding the save data loader from the crypt

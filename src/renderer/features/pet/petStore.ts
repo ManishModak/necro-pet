@@ -22,9 +22,10 @@ export type Mood = typeof Mood[keyof typeof Mood];
 // The vital statistics of our necromantic pet
 export interface PetState {
   health: number;      // 0-100, the life force
-  xp: number;          // 0-infinity, the accumulated essence
+  xp: number;          // 0-199, resets on evolution
   stage: Stage;        // Current evolutionary form
   mood: Mood;          // Current emotional state
+  evolutionLevel: number; // 0=EGG, 1=LARVA, 2=BEAST
 }
 
 // The world context - environmental forces affecting our creature
@@ -79,18 +80,18 @@ export const clampHealth = (value: number): number => {
   return Math.max(0, Math.min(100, value));
 };
 
-// Pure function: Calculate stage based on XP and health
+// Pure function: Calculate stage based on evolution level and health
 // Death overrides all - the GHOST stage claims those with no life force
-export const calculateStage = (xp: number, health: number): Stage => {
+export const calculateStage = (evolutionLevel: number, health: number): Stage => {
   // The dead transcend all evolutionary stages
   if (health === 0) {
     return Stage.GHOST;
   }
 
-  // The living evolve through XP thresholds
-  if (xp <= 10) {
+  // The living evolve through evolution levels
+  if (evolutionLevel === 0) {
     return Stage.EGG;
-  } else if (xp <= 50) {
+  } else if (evolutionLevel === 1) {
     return Stage.LARVA;
   } else {
     return Stage.BEAST;
@@ -111,12 +112,10 @@ export const calculateMood = (health: number): Mood => {
 // Pure function: Calculate health decay based on hours since last commit
 export const calculateDecay = (hoursSinceCommit: number): number => {
   if (hoursSinceCommit <= 24) return 0;           // Grace period - Day 1
-  if (hoursSinceCommit <= 48) return 15;          // Day 2
-  if (hoursSinceCommit <= 72) return 40;          // Day 3 (15 + 25)
+  if (hoursSinceCommit <= 36) return 50;          // Day 1.5 - severe decay
 
-  // Day 4+: 40 + 35 per additional day
-  const additionalDays = Math.floor((hoursSinceCommit - 72) / 24);
-  return 40 + (additionalDays * 35);
+  // After 36 hours: instant death
+  return 200; // Exceeds max health, ensures death
 };
 
 // Pure function: Calculate revival health based on commit message
@@ -139,6 +138,7 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
   xp: 0,
   stage: Stage.EGG,
   mood: Mood.HAPPY,
+  evolutionLevel: 0,
 
   // Initial world context - clear skies and daylight
   weather: 'CLEAR',
@@ -155,7 +155,7 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
     const newHealth = clampHealth(state.health - amount);
     return {
       health: newHealth,
-      stage: calculateStage(state.xp, newHealth),
+      stage: calculateStage(state.evolutionLevel, newHealth),
       mood: calculateMood(newHealth)
     };
   }),
@@ -165,17 +165,28 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
     const newHealth = clampHealth(state.health + amount);
     return {
       health: newHealth,
-      stage: calculateStage(state.xp, newHealth),
+      stage: calculateStage(state.evolutionLevel, newHealth),
       mood: calculateMood(newHealth)
     };
   }),
 
   // Increase XP - the accumulation of essence
   increaseXP: (amount: number) => set((state) => {
-    const newXP = Math.max(0, state.xp + amount);
+    const newXP = state.xp + amount;
+    let finalXP = newXP;
+    let newEvolutionLevel = state.evolutionLevel;
+
+    // Check for evolution at 200 XP threshold
+    if (newXP >= 200 && state.evolutionLevel < 2) {
+      finalXP = 0; // Reset XP
+      newEvolutionLevel = state.evolutionLevel + 1; // Evolve
+      console.log(`🦇 EVOLUTION! ${state.stage} → ${calculateStage(newEvolutionLevel, state.health)}`);
+    }
+
     return {
-      xp: newXP,
-      stage: calculateStage(newXP, state.health)
+      xp: finalXP,
+      evolutionLevel: newEvolutionLevel,
+      stage: calculateStage(newEvolutionLevel, state.health)
     };
   }),
 
@@ -185,6 +196,7 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
     xp: 0,
     stage: Stage.EGG,
     mood: Mood.HAPPY,
+    evolutionLevel: 0,
     weather: 'CLEAR',
     isNight: false,
     lastCommitDate: null,
@@ -205,11 +217,13 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
     if (state.health === 0) {
       const revivalHealth = calculateRevivalHealth(message);
       const newXP = 0; // Reset XP on revival
+      const newEvolutionLevel = 0; // Reset to EGG on revival
 
       return {
         health: revivalHealth,
         xp: newXP,
-        stage: calculateStage(newXP, revivalHealth),
+        evolutionLevel: newEvolutionLevel,
+        stage: calculateStage(newEvolutionLevel, revivalHealth),
         mood: calculateMood(revivalHealth),
         lastCommitDate: new Date(timestamp).toISOString(),
         lastCommitHash: hash,
@@ -219,12 +233,22 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
 
     // Normal feeding - +20 HP, +15 XP
     const newHealth = clampHealth(state.health + 20);
-    const newXP = state.xp + 15;
+    const tempXP = state.xp + 15;
+    let finalXP = tempXP;
+    let newEvolutionLevel = state.evolutionLevel;
+
+    // Check for evolution at 200 XP threshold
+    if (tempXP >= 200 && state.evolutionLevel < 2) {
+      finalXP = 0; // Reset XP
+      newEvolutionLevel = state.evolutionLevel + 1; // Evolve
+      console.log(`🦇 EVOLUTION! ${state.stage} → ${calculateStage(newEvolutionLevel, newHealth)}`);
+    }
 
     return {
       health: newHealth,
-      xp: newXP,
-      stage: calculateStage(newXP, newHealth),
+      xp: finalXP,
+      evolutionLevel: newEvolutionLevel,
+      stage: calculateStage(newEvolutionLevel, newHealth),
       mood: calculateMood(newHealth),
       lastCommitDate: new Date(timestamp).toISOString(),
       lastCommitHash: hash
@@ -239,7 +263,7 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
     const newHealth = clampHealth(state.health - decay);
     return {
       health: newHealth,
-      stage: calculateStage(state.xp, newHealth),
+      stage: calculateStage(state.evolutionLevel, newHealth),
       mood: calculateMood(newHealth)
     };
   }),
@@ -250,11 +274,13 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
 
     const revivalHealth = calculateRevivalHealth(commitMessage);
     const newXP = 0; // Reset XP on revival
+    const newEvolutionLevel = 0; // Reset to EGG on revival
 
     return {
       health: revivalHealth,
       xp: newXP,
-      stage: calculateStage(newXP, revivalHealth),
+      evolutionLevel: newEvolutionLevel,
+      stage: calculateStage(newEvolutionLevel, revivalHealth),
       mood: calculateMood(revivalHealth),
       deathCount: state.deathCount + 1
     };
@@ -266,6 +292,7 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
     xp: data.xp,
     stage: data.stage as Stage,
     mood: data.mood as Mood,
+    evolutionLevel: (data as any).evolutionLevel ?? 0, // Default to 0 for old saves
     weather: data.weather as WeatherState,
     isNight: data.isNight,
     lastCommitDate: data.lastCommitDate,
