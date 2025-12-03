@@ -45,8 +45,8 @@ function App() {
     window.electronAPI.onCommitDetected((event) => {
       console.log('🦇 Commit offering received:', event.message);
 
-      // Check if pet is dead before feeding
-      const wasDead = petState.health === 0;
+      // Check if pet is dead before feeding (get fresh state)
+      const wasDead = usePetStore.getState().health === 0;
 
       feedFromCommit(event.hash, event.message, event.timestamp);
 

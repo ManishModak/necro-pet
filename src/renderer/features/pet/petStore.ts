@@ -153,6 +153,18 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
   // Decrease health - the decay of life
   decreaseHealth: (amount: number) => set((state) => {
     const newHealth = clampHealth(state.health - amount);
+
+    // If pet dies, reset XP and evolution level
+    if (newHealth === 0) {
+      return {
+        health: 0,
+        xp: 0,
+        evolutionLevel: 0,
+        stage: Stage.GHOST,
+        mood: Mood.DEAD
+      };
+    }
+
     return {
       health: newHealth,
       stage: calculateStage(state.evolutionLevel, newHealth),
