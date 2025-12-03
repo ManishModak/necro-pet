@@ -28,13 +28,12 @@ const necroStyles = `
   100% { clip-path: inset(0 0 0 0); }
 }
 
-@keyframes resurrect {
-  0% { transform: scale(0.8) rotate(-10deg); opacity: 0.3; filter: brightness(0.5); }
-  20% { transform: scale(1.2) rotate(5deg); opacity: 1; filter: brightness(2); }
-  40% { transform: scale(0.9) rotate(-3deg); filter: brightness(1.5); }
-  60% { transform: scale(1.1) rotate(2deg); filter: brightness(1.8); }
+@keyframes summon {
+  0% { transform: translateY(20px) scale(0.8); opacity: 0; filter: brightness(0) blur(4px); }
+  30% { transform: translateY(0) scale(1); opacity: 1; filter: brightness(2) blur(0) drop-shadow(0 0 20px #00ff41); }
+  60% { transform: scale(1.1); filter: brightness(1.5) drop-shadow(0 0 10px #00ff41); }
   80% { transform: scale(0.95); filter: brightness(1.2); }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
+  100% { transform: scale(1); filter: brightness(1); }
 }
 
 @keyframes flash-bg {
@@ -54,8 +53,8 @@ const necroStyles = `
   animation: glitch 0.3s steps(1) forwards;
 }
 
-.animate-resurrect {
-  animation: resurrect 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+.animate-summon {
+  animation: summon 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .flash-bg {
@@ -276,10 +275,10 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
       setIsResurrecting(true);
       setShowResurrectMessage(true);
 
-      // Animation lasts 1.5 seconds
+      // Animation lasts 2 seconds
       setTimeout(() => {
         setIsResurrecting(false);
-      }, 1500);
+      }, 2000);
 
       // Message lasts 3 seconds
       setTimeout(() => {
@@ -298,7 +297,7 @@ export const PetDisplay: React.FC<PetDisplayProps> = () => {
 
   // Conjuring the animation class based on the pet's state
   const getAnimationClass = (): string => {
-    if (isResurrecting) return 'animate-resurrect';
+    if (isResurrecting) return 'animate-summon';
     if (stage === Stage.GHOST && isGlitching) return 'animate-glitch';
     if (mood === Mood.HUNGRY) return 'animate-shake';
     if (mood !== Mood.DEAD) return 'animate-breathing';
