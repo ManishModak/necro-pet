@@ -49,9 +49,9 @@ export const DebugPanel: React.FC = () => {
     );
   };
 
-  // Simulate 24 hours passing
+  // Simulate 24 hours passing (12h beyond grace period = ~33 HP decay)
   const simulateDayPass = () => {
-    applyTimeDecay(48); // Apply 48 hours of decay (15 HP)
+    applyTimeDecay(24); // Apply 24 hours of decay (~33 HP)
   };
 
   return (
@@ -177,7 +177,7 @@ export const DebugPanel: React.FC = () => {
           onClick={simulateDayPass}
           className="w-full px-2 py-1 border border-blood-red text-blood-red hover:bg-blood-red hover:text-crypt-dark text-xs mb-2"
         >
-          ⏰ SIMULATE DAY PASS (-15 HP)
+          ⏰ SIMULATE DAY PASS (~33 HP)
         </button>
       </div>
 

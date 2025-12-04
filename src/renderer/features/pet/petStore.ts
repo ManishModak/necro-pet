@@ -111,11 +111,17 @@ export const calculateMood = (health: number): Mood => {
 
 // Pure function: Calculate health decay based on hours since last commit
 export const calculateDecay = (hoursSinceCommit: number): number => {
-  if (hoursSinceCommit <= 24) return 0;           // Grace period - Day 1
-  if (hoursSinceCommit <= 36) return 50;          // Day 1.5 - severe decay
+  // Grace period - first 12 hours
+  if (hoursSinceCommit <= 12) return 0;
 
-  // After 36 hours: instant death
-  return 200; // Exceeds max health, ensures death
+  // After 48 hours: instant death
+  if (hoursSinceCommit >= 48) return 200; // Exceeds max health, ensures death
+
+  // Linear decay from 12h to 48h
+  // Over 36 hours (48-12), pet loses 100 HP
+  // Formula: (hours - 12) * (100 / 36)
+  const hoursOfDecay = hoursSinceCommit - 12;
+  return Math.floor(hoursOfDecay * (100 / 36));
 };
 
 // Pure function: Calculate revival health based on commit message
