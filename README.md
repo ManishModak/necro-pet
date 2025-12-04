@@ -26,6 +26,32 @@ A haunted desktop virtual pet that feeds on your Git activity. Built for the **K
 
 ---
 
+## 🏆 Hackathon Submission: Resurrection Category
+
+**Resurrecting Obsolete Technology:**
+
+- **Original Tech**: Tamagotchi (1996) - simple LCD pets with manual buttons
+- **Modern Reimagining**: AI-powered desktop pet with real-world data integration
+
+**The Transformation:**
+
+| Original (1996) | Necro-Pet (2025) |
+|----------------|------------------|
+| Manual button presses | Git commit detection |
+| Random number generators | LLM-driven narratives |
+| Static pixel art | Dynamic weather-reactive environments |
+| Isolated gameplay | Real-world data integration |
+| Single device | Cross-project persistence |
+
+### Solving Modern Developer Problems
+
+1. **Gamified Productivity**: Visual feedback encourages frequent commits
+2. **Burnout Prevention**: Health decay warns against overwork
+3. **Cross-Project Engagement**: Pet state persists across different coding projects
+4. **Team Collaboration**: Shared pet creates team coding challenges
+
+---
+
 ## 🦇 Overview
 
 Necro-Pet is a **desktop virtual pet** that gamifies your coding workflow:
@@ -213,34 +239,6 @@ Necro-Pet reacts to real-world weather conditions:
 | **Rain** | ![Rain Day](assets/rain-day.gif) | ![Rain Night](assets/rain-night.gif) |
 | **Snow** | ![Snow Day](assets/snow-day.gif) | ![Snow Night](assets/snow-night.gif) |
 | **Storm** | ![Storm Day](assets/storm-day.gif) | ![Storm Night](assets/storm-night.gif) |
-
----
-
-## 🏆 Hackathon Submission: Resurrection Category
-
-### Why This Project Belongs in Resurrection
-
-**Resurrecting Obsolete Technology:**
-
-- **Original Tech**: Tamagotchi (1996) - simple LCD pets with manual buttons
-- **Modern Reimagining**: AI-powered desktop pet with real-world data integration
-
-**The Transformation:**
-
-| Original (1996) | Necro-Pet (2025) |
-|----------------|------------------|
-| Manual button presses | Git commit detection |
-| Random number generators | LLM-driven narratives |
-| Static pixel art | Dynamic weather-reactive environments |
-| Isolated gameplay | Real-world data integration |
-| Single device | Cross-project persistence |
-
-### Solving Modern Developer Problems
-
-1. **Gamified Productivity**: Visual feedback encourages frequent commits
-2. **Burnout Prevention**: Health decay warns against overwork
-3. **Cross-Project Engagement**: Pet state persists across different coding projects
-4. **Team Collaboration**: Shared pet creates team coding challenges
 
 ---
 
