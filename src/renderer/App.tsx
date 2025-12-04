@@ -87,7 +87,8 @@ function App() {
             const addHistoricalEntries = useActivityLogStore.getState().addHistoricalEntries;
             addHistoricalEntries(
               history.map(c => ({
-                type: 'commit' as const,
+                // Smart detection: check if commit message contains "resurrect"
+                type: c.message.toLowerCase().includes('resurrect') ? 'resurrect' : 'feed',
                 path: c.message,
                 timestamp: c.timestamp
               }))

@@ -43,11 +43,11 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
   // Get spooky label for event type
   const getEventLabel = (type: 'commit' | 'resurrection' | 'feed' | 'resurrect'): string => {
     switch (type) {
-      case 'commit': return 'FED';
-      case 'resurrection': return 'RESURRECTED';
+      case 'commit': return 'PET FED';
+      case 'resurrection': return 'PET RESURRECTED';
       case 'feed': return 'PET FED';
       case 'resurrect': return 'PET RESURRECTED';
-      default: return 'FED';
+      default: return 'PET FED';
     }
   };
 
@@ -64,8 +64,8 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
   // Display current session entries newest-first
   const displayCurrentEntries = [...currentSessionEntries].reverse();
 
-  // Display historical entries newest-first (when expanded)
-  const displayHistoricalEntries = [...historicalEntries].reverse();
+  // Historical entries are ALREADY newest-first from store (don't reverse!)
+  const displayHistoricalEntries = historicalEntries;
 
   return (
     <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green glow-border">
