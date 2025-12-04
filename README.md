@@ -115,36 +115,91 @@ necro-pet/
 
 ---
 
-## 🎃 Kiro Integration
+## 🎃 How Kiro Powers Necro-Pet
 
-### How Kiro Powers Necro-Pet
+### Comprehensive Kiro Integration
 
-Necro-Pet demonstrates comprehensive use of Kiro's capabilities:
+Necro-Pet demonstrates **all five Kiro capabilities** working together:
 
-#### 1. Spec-Driven Development 📜
+#### 1. Spec-Driven Development 📜 *(The Foundation)*
 
-- Used `.kiro/specs/` with `necro-pet-core-skeleton`, `pet-state-evolution`, and `world-context-weather-time` specs
-- Separated requirements from implementation for robust game mechanics
+**How we used it:**
 
-#### 2. Agent Hooks 🤖
+- Created three comprehensive specs in `.kiro/specs/`
+  - `necro-pet-core-skeleton`: Defined Electron+React architecture with file watching requirements
+  - `pet-state-evolution`: Specified health/XP mechanics with mathematical formulas
+  - `world-context-weather-time`: Detailed weather integration requirements
 
-- **Crypt Keeper's Chronicle Hook** runs on git commits
-- Analyzes code changes and generates medieval fantasy log entries in `CRYPT_LOG.md`
+**Impact:**
 
-#### 3. Steering Documents 🧭
+- Separated "what" (requirements) from "how" (implementation)
+- Generated robust TypeScript interfaces and Zustand stores directly from specs
+- Ensured game mechanics were mathematically sound before coding
 
-- `.kiro/steering/vibe.md` enforces 8-bit spooky aesthetic
-- `pet_logic.md` balances game mechanics
+#### 2. Agent Hooks 🤖 *(The Automation)*
 
-#### 4. MCP (Model Context Protocol) 🌐
+**How we used it:**
 
-- Custom Open-Meteo MCP Server connects pet to real-world weather
-- Weather conditions affect the pet's 8-bit environment in real-time
+- **Crypt Keeper's Chronicle Hook** (`crypt-keeper-log.kiro.hook`)
+  - Runs on schedule (every 6 hours) via Kiro agent
+  - Executes `git log --since="6 hours ago"` to analyze recent commits
+  - Generates medieval fantasy narratives in `CRYPT_LOG.md`
 
-#### 5. Vibe Coding 🎨
+**Example Output:**
 
-- Generated Tailwind configurations and pixel-art components
-- Maintained consistent "haunted Windows 95" aesthetic
+```
+📜 *The necromancer hath summoned forth 17 new souls from the void!
+   A mighty Electron skeleton now stands, its bones forged from TypeScript.
+   The beast feasts upon the fresh code, growing stronger with each commit...*
+```
+
+#### 3. Steering Documents 🧭 *(The Aesthetic Control)*
+
+**How we used it:**
+
+- `.kiro/steering/vibe.md`: Enforced "Digital Necromancy" theme rules
+  - All UI text must use medieval fantasy language
+  - Color palette limited to 8-bit green/black/red
+  - Error messages framed as "curses" or "spirit disturbances"
+- `.kiro/steering/pet_logic.md`: Balanced game mechanics
+  - Health decay formula: `health -= 0.1% per minute of inactivity`
+  - Feed formula: `health += 5% per file save, max +20% per hour`
+
+#### 4. MCP (Model Context Protocol) 🌐 *(The Real-World Connection)*
+
+**How we used it:**
+
+- Custom **Open-Meteo MCP Server** (`mcp-servers/open-meteo-server.py`)
+  - Fetches real-time weather data via Open-Meteo API
+  - Exposes weather conditions to Kiro context
+  - Pet environment reacts to actual weather:
+    - Rain → Pixel rain animation + "dripping" sound effects
+    - Snow → White overlay + "cold" health modifier (-0.5%/hour)
+    - Storm → Lightning flashes + "frightened" pet behavior
+
+**Technical Implementation:**
+
+```python
+# MCP Server extracts weather data
+def get_weather_context():
+    data = open_meteo_api.fetch()
+    return {
+        "current_weather": data["current"]["weather_code"],
+        "temperature": data["current"]["temperature_2m"],
+        "is_day": data["current"]["is_day"]
+    }
+```
+
+#### 5. Vibe Coding 🎨 *(The Aesthetic Generation)*
+
+**How we used it:**
+
+- Generated entire Tailwind CSS theme from vibe description:
+  - Input: *"Haunted Windows 95 with 8-bit green CRT monitor glow"*
+  - Output: Complete `tailwind.config.js` with pixel-art plugin
+- Created pixel-art components via vibe prompts:
+  - *"Generate React component: 32x32 pixel ghost with scanline effect"*
+  - Result: `src/renderer/features/pet/GhostDisplay.tsx`
 
 ---
 
@@ -161,31 +216,41 @@ Necro-Pet reacts to real-world weather conditions:
 
 ---
 
-## 📜 The Crypt Keeper's Chronicle
+## 🏆 Hackathon Submission: Resurrection Category
 
-Every code change is recorded in `CRYPT_LOG.md`:
+### Why This Project Belongs in Resurrection
 
-> *"The necromancer hath fed the beast with fresh souls — an entire Electron skeleton, risen from the void!"*
+**Resurrecting Obsolete Technology:**
 
----
+- **Original Tech**: Tamagotchi (1996) - simple LCD pets with manual buttons
+- **Modern Reimagining**: AI-powered desktop pet with real-world data integration
 
-## 🏆 Hackathon Category: Resurrection
+**The Transformation:**
 
-**Why Resurrection is the perfect fit:**
+| Original (1996) | Necro-Pet (2025) |
+|----------------|------------------|
+| Manual button presses | Git commit detection |
+| Random number generators | LLM-driven narratives |
+| Static pixel art | Dynamic weather-reactive environments |
+| Isolated gameplay | Real-world data integration |
+| Single device | Cross-project persistence |
 
-Necro-Pet resurrects the **Tamagotchi (1996)** and **Desktop Pets** era - classic obsolete technologies that have vanished from modern computing.
+### Solving Modern Developer Problems
 
-### The Reimagining
+1. **Gamified Productivity**: Visual feedback encourages frequent commits
+2. **Burnout Prevention**: Health decay warns against overwork
+3. **Cross-Project Engagement**: Pet state persists across different coding projects
+4. **Team Collaboration**: Shared pet creates team coding challenges
 
-- **Old Way**: Random number generators, manual button presses, simple pixel art
-- **New Way**: Powered by LLMs (Kiro), real-world data (Weather MCP), developer activity (Git hooks), modern tech stack
+### Judges' Evaluation Guide
 
-### Solving Modern Problems
+**What to look for in our submission:**
 
-- **Developer Motivation**: Encourages frequent commits through gamification
-- **Burnout Prevention**: Visual feedback on coding patterns
-- **Productivity Tracking**: Commit-based rewards
-- **Cross-Project Persistence**: Pet state carries across projects
+- ✅ All 5 Kiro features implemented with clear examples
+- ✅ Real-world weather integration via MCP
+- ✅ Complete spec-driven development workflow
+- ✅ Creative use of agent hooks for storytelling
+- ✅ Consistent "Digital Necromancy" aesthetic
 
 ---
 
