@@ -16,6 +16,7 @@ export interface SaveData {
   lastCommitHash: string | null;
   deathCount: number;
   watchedProjectPath: string | null;  // Path to the git repo being watched
+  activityLog: Array<{ id: string; type: string; path: string; timestamp: number }>;  // Activity log entries
   createdAt: string;
   updatedAt: string;
 }
@@ -33,6 +34,7 @@ const DEFAULT_SAVE_DATA: SaveData = {
   lastCommitHash: null,
   deathCount: 0,
   watchedProjectPath: null,  // Will be set on first run
+  activityLog: [],  // Empty activity log on new save
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString()
 };

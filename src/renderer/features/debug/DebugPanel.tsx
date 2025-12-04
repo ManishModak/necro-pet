@@ -2,6 +2,7 @@
 // DELETE THIS FILE BEFORE PRODUCTION - it's for demo purposes only!
 import React from 'react';
 import { usePetStore } from '../pet/petStore';
+import { useActivityLogStore } from '../activity-log/activityLogStore';
 import { WeatherState } from '../../services/weatherService';
 
 export const DebugPanel: React.FC = () => {
@@ -136,8 +137,9 @@ export const DebugPanel: React.FC = () => {
             const path = await window.electronAPI.selectDirectory();
             if (path) {
               console.log('🦇 New watch path selected:', path);
-              // Save the new path and reload app
-              window.electronAPI.saveData({ watchedProjectPath: path });
+              // Clear activity log and save the new path
+              useActivityLogStore.getState().clearEntries();
+              window.electronAPI.saveData({ watchedProjectPath: path, activityLog: [] });
               alert(`Watching: ${path}\n\nPlease restart the app for changes to take effect.`);
             }
           }}

@@ -42,6 +42,12 @@ export const registerIPCHandlers = (): void => {
 
     return result.filePaths[0];
   });
+
+  // Handler for getting git history
+  ipcMain.handle('git:get-history', async (_event, watchPath: string) => {
+    const { getGitHistory } = require('./gitWatcher');
+    return await getGitHistory(watchPath);
+  });
 };
 
 // Broadcasting file events to all windows in the séance chamber

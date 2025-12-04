@@ -73,6 +73,25 @@ function App() {
       console.log('🦇 Loading pet soul from the crypt...');
       loadFromSave(data);
 
+      // Load activity log from save
+      if (data.activityLog && Array.isArray(data.activityLog)) {
+        const clearEntries = useActivityLogStore.getState().clearEntries;
+        const addEntryDirect = useActivityLogStore.getState().addEntry;
+
+        // Clear existing entries
+        clearEntries();
+
+        // Restore saved entries
+        data.activityLog.forEach((entry: any) => {
+          addEntryDirect({
+            type: entry.type,
+            path: entry.path,
+            timestamp: entry.timestamp
+          });
+        });
+        console.log(`🦇 Restored ${data.activityLog.length} activity log entries`);
+      }
+
       // Calculate and apply time decay
       if (data.lastCommitDate) {
         const lastCommit = new Date(data.lastCommitDate);
@@ -98,6 +117,7 @@ function App() {
   // Auto-save pet state whenever it changes
   useEffect(() => {
     // Skip the initial mount
+    const entries = useActivityLogStore.getState().entries;
     const saveData = {
       health: petState.health,
       xp: petState.xp,
@@ -107,7 +127,8 @@ function App() {
       isNight: petState.isNight,
       lastCommitDate: petState.lastCommitDate,
       lastCommitHash: petState.lastCommitHash,
-      deathCount: petState.deathCount
+      deathCount: petState.deathCount,
+      activityLog: entries  // Save activity log
     };
 
     window.electronAPI.saveData(saveData);

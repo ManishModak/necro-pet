@@ -41,6 +41,7 @@ export interface ElectronAPI {
   onSaveLoaded: (callback: (data: SaveData) => void) => void;
   saveData: (data: Partial<SaveData>) => void;
   selectDirectory: () => Promise<string | null>;
+  getGitHistory: (watchPath: string) => Promise<Array<{ hash: string; message: string; timestamp: number }>>;
   removeFileListeners: () => void;
   removeCommitListeners: () => void;
   removeSaveListeners: () => void;
@@ -91,6 +92,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Open directory picker dialog
   selectDirectory: async (): Promise<string | null> => {
     return ipcRenderer.invoke('dialog:select-directory');
+  },
+
+  // Get git commit history
+  getGitHistory: async (watchPath: string) => {
+    return ipcRenderer.invoke('git:get-history', watchPath);
   },
 
   // Banishing all file listeners when the séance ends

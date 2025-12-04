@@ -173,6 +173,34 @@ export const stopGitWatcher = (): void => {
   isGitRepo = false;
 };
 
+// Export git history getter for external use
+export const getGitHistory = async (watchPath: string) => {
+  try {
+    const { stdout } = await execAsync(
+      'git log -50 --pretty=format:"%H|%s|%ct"',
+      { cwd: watchPath }
+    );
+
+    if (!stdout.trim()) {
+      return [];
+    }
+
+    const commits = stdout.trim().split('\n').map(line => {
+      const [hash, message, timestamp] = line.split('|');
+      return {
+        hash: hash.trim(),
+        message: message.trim(),
+        timestamp: parseInt(timestamp) * 1000 // Convert to milliseconds
+      };
+    });
+
+    return commits;
+  } catch (error) {
+    console.error('🦇 Error fetching git history:', error);
+    return [];
+  }
+};
+
 // Get the last known commit (for initialization)
 export const getLastKnownCommit = async (): Promise<GitCommit | null> => {
   if (!currentWatchPath) return null;
