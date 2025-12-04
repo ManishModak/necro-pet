@@ -242,16 +242,6 @@ Necro-Pet reacts to real-world weather conditions:
 3. **Cross-Project Engagement**: Pet state persists across different coding projects
 4. **Team Collaboration**: Shared pet creates team coding challenges
 
-### Judges' Evaluation Guide
-
-**What to look for in our submission:**
-
-- ✅ All 5 Kiro features implemented with clear examples
-- ✅ Real-world weather integration via MCP
-- ✅ Complete spec-driven development workflow
-- ✅ Creative use of agent hooks for storytelling
-- ✅ Consistent "Digital Necromancy" aesthetic
-
 ---
 
 ## 📄 License
