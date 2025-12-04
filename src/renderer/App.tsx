@@ -1,5 +1,5 @@
 // The Séance Chamber - where the spirits manifest...
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ActivityLog } from './features/activity-log/ActivityLog';
 import { useActivityLogStore } from './features/activity-log/activityLogStore';
 import { PetDisplay } from './features/pet/PetDisplay';
@@ -122,24 +122,40 @@ function App() {
     };
   }, [addEntry, feedFromCommit, loadFromSave, applyTimeDecay]);
 
+  // Performance: Debounced auto-save to reduce IPC calls
+  const debouncedSave = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Auto-save pet state whenever it changes
   useEffect(() => {
-    // Skip the initial mount
-    const entries = useActivityLogStore.getState().entries;
-    const saveData = {
-      health: petState.health,
-      xp: petState.xp,
-      stage: petState.stage,
-      mood: petState.mood,
-      weather: petState.weather,
-      isNight: petState.isNight,
-      lastCommitDate: petState.lastCommitDate,
-      lastCommitHash: petState.lastCommitHash,
-      deathCount: petState.deathCount,
-      activityLog: entries  // Save activity log
-    };
+    // Performance: Skip the initial mount and use debouncing
+    if (debouncedSave.current) {
+      clearTimeout(debouncedSave.current);
+    }
 
-    window.electronAPI.saveData(saveData);
+    debouncedSave.current = setTimeout(() => {
+      const entries = useActivityLogStore.getState().entries;
+      const saveData = {
+        health: petState.health,
+        xp: petState.xp,
+        stage: petState.stage,
+        mood: petState.mood,
+        weather: petState.weather,
+        isNight: petState.isNight,
+        lastCommitDate: petState.lastCommitDate,
+        lastCommitHash: petState.lastCommitHash,
+        deathCount: petState.deathCount,
+        activityLog: entries  // Save activity log
+      };
+
+      window.electronAPI.saveData(saveData);
+    }, 500); // 500ms debounce delay
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (debouncedSave.current) {
+        clearTimeout(debouncedSave.current);
+      }
+    };
   }, [
     petState.health,
     petState.xp,

@@ -2,8 +2,32 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { watch, FSWatcher } from 'fs';
-import { join } from 'path';
+import { join, normalize, resolve } from 'path';
 import { sendCommitEvent } from './ipc';
+
+// Security: Path validation and sanitization utilities
+export const validateAndSanitizePath = (path: string): string => {
+  try {
+    // Resolve to absolute path to prevent directory traversal
+    const absolutePath = resolve(path);
+
+    // Normalize to remove any relative path components
+    const normalizedPath = normalize(absolutePath);
+
+    // Check for suspicious patterns
+    if (normalizedPath.includes('..') || normalizedPath.includes('~')) {
+      throw new Error('Invalid path: contains suspicious path components');
+    }
+
+    // Additional security checks could be added here
+    // e.g., check against allowed directories, etc.
+
+    return normalizedPath;
+  } catch (error) {
+    console.error('🦇 Path validation failed:', error);
+    throw new Error('Invalid or unsafe path provided');
+  }
+};
 
 const execAsync = promisify(exec);
 
@@ -32,7 +56,9 @@ let debounceTimer: NodeJS.Timeout | null = null;
 // Check if the directory is a git repository
 const checkIsGitRepo = async (watchPath: string): Promise<boolean> => {
   try {
-    await execAsync('git rev-parse --is-inside-work-tree', { cwd: watchPath });
+    // Security: Validate and sanitize the watch path
+    const sanitizedPath = validateAndSanitizePath(watchPath);
+    await execAsync('git rev-parse --is-inside-work-tree', { cwd: sanitizedPath });
     return true;
   } catch {
     return false;
@@ -111,42 +137,49 @@ const debouncedPoll = (): void => {
 export const initGitWatcher = async (config: GitWatcherConfig): Promise<void> => {
   const { pollInterval = 30000, watchPath } = config;
 
-  console.log('🦇 Initializing Git Oracle for:', watchPath);
-
-  // Check if it's a git repository
-  isGitRepo = await checkIsGitRepo(watchPath);
-
-  if (!isGitRepo) {
-    console.log('🦇 Not a git repository. Git watching disabled for:', watchPath);
-    return;
-  }
-
-  currentWatchPath = watchPath;
-
-  // Get the initial commit hash
-  const initialCommit = await getLatestCommit(watchPath);
-  if (initialCommit) {
-    lastKnownHash = initialCommit.hash;
-    console.log('🦇 Initial commit hash:', lastKnownHash?.substring(0, 7));
-  }
-
-  // Watch .git/refs/heads for instant commit detection
   try {
-    const refsPath = join(watchPath, '.git', 'refs', 'heads');
-    fileWatcher = watch(refsPath, { recursive: true }, (eventType, filename) => {
-      if (eventType === 'change' || eventType === 'rename') {
-        console.log(`🦇 Git ref changed: ${filename}`);
-        debouncedPoll(); // Trigger immediate check with debounce
-      }
-    });
-    console.log('🦇 File watcher active on .git/refs/heads');
-  } catch (error) {
-    console.log('🦇 Could not watch .git/refs/heads, relying on polling only');
-  }
+    // Security: Validate and sanitize the watch path
+    const sanitizedPath = validateAndSanitizePath(watchPath);
+    console.log('🦇 Initializing Git Oracle for:', sanitizedPath);
 
-  // Start polling
-  watchInterval = setInterval(pollForCommits, pollInterval);
-  console.log(`🦇 Git Oracle awakened. Polling every ${pollInterval / 1000} seconds...`);
+    // Check if it's a git repository
+    isGitRepo = await checkIsGitRepo(sanitizedPath);
+
+    if (!isGitRepo) {
+      console.log('🦇 Not a git repository. Git watching disabled for:', watchPath);
+      return;
+    }
+
+    currentWatchPath = watchPath;
+
+    // Get the initial commit hash
+    const initialCommit = await getLatestCommit(watchPath);
+    if (initialCommit) {
+      lastKnownHash = initialCommit.hash;
+      console.log('🦇 Initial commit hash:', lastKnownHash?.substring(0, 7));
+    }
+
+    // Watch .git/refs/heads for instant commit detection
+    try {
+      const refsPath = join(watchPath, '.git', 'refs', 'heads');
+      fileWatcher = watch(refsPath, { recursive: true }, (eventType, filename) => {
+        if (eventType === 'change' || eventType === 'rename') {
+          console.log(`🦇 Git ref changed: ${filename}`);
+          debouncedPoll(); // Trigger immediate check with debounce
+        }
+      });
+      console.log('🦇 File watcher active on .git/refs/heads');
+    } catch (error) {
+      console.log('🦇 Could not watch .git/refs/heads, relying on polling only');
+    }
+
+    // Start polling
+    watchInterval = setInterval(pollForCommits, pollInterval);
+    console.log(`🦇 Git Oracle awakened. Polling every ${pollInterval / 1000} seconds...`);
+  } catch (error) {
+    console.error('🦇 Failed to initialize Git Oracle:', error);
+    throw error;
+  }
 };
 
 // Stop the git watcher
@@ -176,9 +209,12 @@ export const stopGitWatcher = (): void => {
 // Export git history getter for external use
 export const getGitHistory = async (watchPath: string) => {
   try {
+    // Security: Validate and sanitize the watch path
+    const sanitizedPath = validateAndSanitizePath(watchPath);
+
     const { stdout } = await execAsync(
       'git log -50 --pretty=format:"%H|%s|%at"',
-      { cwd: watchPath }
+      { cwd: sanitizedPath }
     );
 
     if (!stdout.trim()) {

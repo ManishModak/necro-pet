@@ -1,6 +1,7 @@
 // The Crypt's sentinel - watching over the mortal realm's files...
 import chokidar, { FSWatcher } from 'chokidar';
 import { sendFileEvent, FileEvent } from './ipc';
+import * as fs from 'fs';
 
 // The watcher instance - our eternal guardian
 let watcher: FSWatcher | null = null;
@@ -15,11 +16,36 @@ const IGNORED_PATTERNS = [
   '**/.cache/**'
 ];
 
-// Summoning the file watcher to monitor the mortal realm
-export const initFileWatcher = (targetPath: string): FSWatcher => {
-  console.log('👁️ Awakening the sentinel to watch:', targetPath);
-  
+// Performance: Configuration for different project sizes
+const getWatchDepthForPath = (targetPath: string): number => {
   try {
+    // Check if this is a large project directory
+    const stats = fs.statSync(targetPath);
+    if (stats.isDirectory()) {
+      const files = fs.readdirSync(targetPath);
+      // For large projects, reduce depth to improve performance
+      if (files.length > 1000) {
+        return 5; // Shallow depth for large projects
+      } else if (files.length > 500) {
+        return 10; // Medium depth for medium projects
+      }
+    }
+    return 99; // Full depth for small projects
+  } catch (error) {
+    // If we can't determine, use default depth
+    return 99;
+  }
+};
+
+// Summoning the file watcher to monitor the mortal realm
+export const initFileWatcher = (targetPath: string, config: { maxDepth?: number } = {}): FSWatcher => {
+  console.log('👁️ Awakening the sentinel to watch:', targetPath);
+
+  try {
+    // Performance: Determine optimal depth based on project size
+    const watchDepth = config.maxDepth || getWatchDepthForPath(targetPath);
+    console.log(`👁️ Using watch depth: ${watchDepth} for performance optimization`);
+
     // Creating the watcher with our dark configuration
     watcher = chokidar.watch(targetPath, {
       ignored: IGNORED_PATTERNS,
@@ -29,7 +55,13 @@ export const initFileWatcher = (targetPath: string): FSWatcher => {
         stabilityThreshold: 100,
         pollInterval: 50
       },
-      depth: 99, // Recursive watching
+      depth: watchDepth, // Dynamic depth based on project size
+      usePolling: false, // Use native file watching for better performance
+      interval: 100, // Polling interval if usePolling is true
+      binaryInterval: 300, // Binary polling interval
+      alwaysStat: false, // Don't stat files on startup for performance
+      ignorePermissionErrors: true, // Ignore permission errors to prevent crashes
+      atomic: true, // Use atomic file writing detection
     });
 
     // Listening for file changes - the whispers of modification
@@ -39,7 +71,7 @@ export const initFileWatcher = (targetPath: string): FSWatcher => {
         path,
         timestamp: Date.now()
       };
-      
+
       console.log('📝 The spirits detected a change:', path);
       sendFileEvent(event);
     });
@@ -51,7 +83,7 @@ export const initFileWatcher = (targetPath: string): FSWatcher => {
         path,
         timestamp: Date.now()
       };
-      
+
       console.log('✨ A new file materializes:', path);
       sendFileEvent(event);
     });

@@ -305,17 +305,50 @@ export const usePetStore = create<PetState & WorldContextState & CommitState & P
   }),
 
   // Load from save - restore the pet's soul from the crypt
-  loadFromSave: (data) => set({
-    health: data.health,
-    xp: data.xp,
-    stage: data.stage as Stage,
-    mood: data.mood as Mood,
-    evolutionLevel: (data as any).evolutionLevel ?? 0, // Default to 0 for old saves
-    weather: data.weather as WeatherState,
-    isNight: data.isNight,
-    lastCommitDate: data.lastCommitDate,
-    lastCommitHash: data.lastCommitHash,
-    deathCount: data.deathCount,
-    watchedProjectPath: data.watchedProjectPath
-  })
+  loadFromSave: (data) => {
+    // Runtime validation for type safety
+    const validateStage = (stage: string): Stage => {
+      const validStages: Stage[] = [Stage.EGG, Stage.LARVA, Stage.BEAST, Stage.GHOST];
+      return validStages.includes(stage as Stage) ? stage as Stage : Stage.EGG;
+    };
+
+    const validateMood = (mood: string): Mood => {
+      const validMoods: Mood[] = [Mood.HAPPY, Mood.HUNGRY, Mood.DEAD];
+      return validMoods.includes(mood as Mood) ? mood as Mood : Mood.HAPPY;
+    };
+
+    const validateWeather = (weather: string): WeatherState => {
+      const validWeather: WeatherState[] = ['CLEAR', 'RAIN', 'SNOW', 'STORM'];
+      return validWeather.includes(weather as WeatherState) ? weather as WeatherState : 'CLEAR';
+    };
+
+    // Validate and sanitize all incoming data
+    const health = typeof data.health === 'number' && !isNaN(data.health)
+      ? Math.max(0, Math.min(100, data.health))
+      : 100; // Default health
+
+    const xp = typeof data.xp === 'number' && !isNaN(data.xp)
+      ? Math.max(0, data.xp)
+      : 0; // Default XP
+
+    const evolutionLevel = typeof (data as any).evolutionLevel === 'number' && !isNaN((data as any).evolutionLevel)
+      ? Math.max(0, Math.min(2, (data as any).evolutionLevel))
+      : 0;
+
+    set({
+      health,
+      xp,
+      stage: validateStage(data.stage),
+      mood: validateMood(data.mood),
+      evolutionLevel,
+      weather: validateWeather(data.weather),
+      isNight: typeof data.isNight === 'boolean' ? data.isNight : false,
+      lastCommitDate: data.lastCommitDate || null,
+      lastCommitHash: data.lastCommitHash || null,
+      deathCount: typeof data.deathCount === 'number' && !isNaN(data.deathCount)
+        ? Math.max(0, data.deathCount)
+        : 0,
+      watchedProjectPath: data.watchedProjectPath || null
+    });
+  }
 }));

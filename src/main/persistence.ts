@@ -3,6 +3,10 @@ import { app } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 
+// Security constants
+export const MAX_SAVE_FILE_SIZE = 1024 * 1024; // 1MB max file size
+export const MAX_ACTIVITY_LOG_ENTRIES = 1000; // Prevent unbounded growth
+
 // The sacred contract for saved pet data
 export interface SaveData {
   version: number;
@@ -71,6 +75,14 @@ export const loadSaveData = (): SaveData | null => {
       return null;
     }
 
+    // Security: Check file size before reading
+    const stats = fs.statSync(savePath);
+    if (stats.size > MAX_SAVE_FILE_SIZE) {
+      console.error('🦇 Save file too large! Potential security issue detected.');
+      backupCorruptedSave(savePath);
+      return null;
+    }
+
     const rawData = fs.readFileSync(savePath, 'utf-8');
     const data = JSON.parse(rawData) as SaveData;
 
@@ -79,6 +91,12 @@ export const loadSaveData = (): SaveData | null => {
       console.warn('🦇 Save file corrupted! The soul is malformed...');
       backupCorruptedSave(savePath);
       return null;
+    }
+
+    // Security: Validate activity log size
+    if (data.activityLog && data.activityLog.length > MAX_ACTIVITY_LOG_ENTRIES) {
+      console.warn('🦇 Activity log too large, truncating...');
+      data.activityLog = data.activityLog.slice(-MAX_ACTIVITY_LOG_ENTRIES);
     }
 
     console.log('🦇 Pet soul loaded from the crypt:', savePath);
@@ -107,8 +125,32 @@ export const saveSaveData = (data: Partial<SaveData>): void => {
       updatedAt: new Date().toISOString()
     };
 
+    // Security: Validate data before saving
+    if (typeof saveData.health !== 'number' || saveData.health < 0 || saveData.health > 100) {
+      console.error('🦇 Invalid health value, resetting to default');
+      saveData.health = DEFAULT_SAVE_DATA.health;
+    }
+
+    if (typeof saveData.xp !== 'number' || saveData.xp < 0) {
+      console.error('🦇 Invalid XP value, resetting to default');
+      saveData.xp = DEFAULT_SAVE_DATA.xp;
+    }
+
+    // Security: Ensure activity log doesn't grow unbounded
+    if (saveData.activityLog && saveData.activityLog.length > MAX_ACTIVITY_LOG_ENTRIES) {
+      console.warn('🦇 Truncating activity log to prevent unbounded growth');
+      saveData.activityLog = saveData.activityLog.slice(-MAX_ACTIVITY_LOG_ENTRIES);
+    }
+
+    // Security: Check final serialized size
+    const serializedData = JSON.stringify(saveData, null, 2);
+    if (serializedData.length > MAX_SAVE_FILE_SIZE) {
+      console.error('🦇 Save data too large, cannot save');
+      return;
+    }
+
     // Write to the crypt
-    fs.writeFileSync(savePath, JSON.stringify(saveData, null, 2), 'utf-8');
+    fs.writeFileSync(savePath, serializedData, 'utf-8');
     console.log('🦇 Pet soul saved to the crypt');
 
   } catch (error) {
