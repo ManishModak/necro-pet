@@ -9,6 +9,7 @@ export interface ActivityLogProps {
 export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => {
   const entries = useActivityLogStore((state) => state.entries);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [showHistorical, setShowHistorical] = React.useState(false);
 
   // Auto-scroll to the top when new spirits arrive (newest first)
   useEffect(() => {
@@ -52,14 +53,19 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
 
   // Get formatted path/message
   const getDisplayPath = (path: string): string => {
-    return path.replace('COMMIT: ', '');
+    // Remove prefixes
+    return path.replace('HISTORY: ', '').replace('FED: ', '').replace('RESURRECTED: ', '');
   };
 
-  // Calculate historical commits (those loaded from git history, not from current session)
-  // Threshold: oldest non-historical entry timestamp
-  const firstSessionTimestamp = entries.find(e => !e.path.startsWith('HISTORY:'))?.timestamp || Date.now();
-  const historicalEntries = entries.filter(e => e.timestamp < firstSessionTimestamp && e.path.startsWith('HISTORY:'));
-  const displayEntries = [...entries].reverse(); // Newest first
+  // Separate current session entries from historical
+  const currentSessionEntries = entries.filter(e => !e.path.startsWith('HISTORY:'));
+  const historicalEntries = entries.filter(e => e.path.startsWith('HISTORY:'));
+
+  // Display current session entries newest-first
+  const displayCurrentEntries = [...currentSessionEntries].reverse();
+
+  // Display historical entries newest-first (when expanded)
+  const displayHistoricalEntries = [...historicalEntries].reverse();
 
   return (
     <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green glow-border">
@@ -85,19 +91,8 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
           </div>
         ) : (
           <>
-            {/* Collapsed historical commits summary */}
-            {historicalEntries.length > 0 && (
-              <div className="text-terminal-green text-xs text-center py-3 px-2 border border-terminal-green border-opacity-30 bg-panel-bg mb-2">
-                <div className="opacity-50">═══════════════════════════════</div>
-                <div className="py-1">
-                  <span className="text-blood-red">📚</span> {historicalEntries.length} older commit{historicalEntries.length !== 1 ? 's' : ''} from history
-                </div>
-                <div className="opacity-50">═══════════════════════════════</div>
-              </div>
-            )}
-
-            {/* Display entries in reverse (newest first) */}
-            {displayEntries.map((entry) => (
+            {/* Display CURRENT SESSION entries (newest first) */}
+            {displayCurrentEntries.map((entry) => (
               <div
                 key={entry.id}
                 className="bg-panel-bg border border-terminal-green border-opacity-50 p-2 hover:border-opacity-100 transition-all"
@@ -122,6 +117,54 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
                 </div>
               </div>
             ))}
+
+            {/* CLICKABLE BANNER for historical commits (at bottom) */}
+            {historicalEntries.length > 0 && (
+              <>
+                <div
+                  onClick={() => setShowHistorical(!showHistorical)}
+                  className="text-terminal-green text-xs text-center py-3 px-2 border border-terminal-green border-opacity-50 bg-panel-bg hover:border-opacity-100 cursor-pointer transition-all mt-2"
+                >
+                  <div className="opacity-50">═══════════════════════════════</div>
+                  <div className="py-1 flex items-center justify-center gap-2">
+                    <span className="text-blood-red">📚</span>
+                    <span>{historicalEntries.length} older commit{historicalEntries.length !== 1 ? 's' : ''} from history</span>
+                    <span className="text-blood-red">{showHistorical ? '▼' : '▶'}</span>
+                  </div>
+                  <div className="opacity-50">═══════════════════════════════</div>
+                  <div className="text-xs opacity-70 mt-1">
+                    {showHistorical ? 'Click to collapse' : 'Click to expand'}
+                  </div>
+                </div>
+
+                {/* Display HISTORICAL commits when expanded (newest first) */}
+                {showHistorical && displayHistoricalEntries.map((entry) => (
+                  <div
+                    key={entry.id}
+                    className="bg-panel-bg border border-terminal-green border-opacity-30 p-2 hover:border-opacity-60 transition-all opacity-80"
+                  >
+                    <div className="flex items-start gap-2">
+                      <span className="text-base flex-shrink-0">
+                        {getEventIcon(entry.type)}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-blood-red text-xs font-bold">
+                            {getEventLabel(entry.type)}
+                          </span>
+                          <span className="text-terminal-green text-xs">
+                            {formatTimestamp(entry.timestamp)}
+                          </span>
+                        </div>
+                        <div className="text-terminal-green text-xs break-all">
+                          {getDisplayPath(entry.path)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </>
         )}
       </div>
