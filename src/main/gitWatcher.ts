@@ -177,7 +177,7 @@ export const stopGitWatcher = (): void => {
 export const getGitHistory = async (watchPath: string) => {
   try {
     const { stdout } = await execAsync(
-      'git log -50 --pretty=format:"%H|%s|%ct"',
+      'git log -50 --pretty=format:"%H|%s|%at"',
       { cwd: watchPath }
     );
 

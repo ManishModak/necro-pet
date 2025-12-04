@@ -1,6 +1,7 @@
 // The Crypt's messenger - broadcasting whispers to the séance chamber...
 import { BrowserWindow, ipcMain } from 'electron';
 import { saveSaveData } from './persistence';
+import { getGitHistory } from './gitWatcher';
 
 // The sacred contract for file events
 export interface FileEvent {
@@ -45,7 +46,6 @@ export const registerIPCHandlers = (): void => {
 
   // Handler for getting git history
   ipcMain.handle('git:get-history', async (_event, watchPath: string) => {
-    const { getGitHistory } = require('./gitWatcher');
     return await getGitHistory(watchPath);
   });
 };

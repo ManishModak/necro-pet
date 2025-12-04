@@ -10,10 +10,10 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
   const entries = useActivityLogStore((state) => state.entries);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to the bottom when new spirits arrive
+  // Auto-scroll to the top when new spirits arrive (newest first)
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      scrollRef.current.scrollTop = 0;
     }
   }, [entries]);
 
@@ -55,6 +55,12 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
     return path.replace('COMMIT: ', '');
   };
 
+  // Calculate historical commits (those loaded from git history, not from current session)
+  // Threshold: oldest non-historical entry timestamp
+  const firstSessionTimestamp = entries.find(e => !e.path.startsWith('HISTORY:'))?.timestamp || Date.now();
+  const historicalEntries = entries.filter(e => e.timestamp < firstSessionTimestamp && e.path.startsWith('HISTORY:'));
+  const displayEntries = [...entries].reverse(); // Newest first
+
   return (
     <div className="flex flex-col h-full bg-crypt-dark border-2 border-terminal-green glow-border">
       {/* The crypt keeper's header */}
@@ -78,31 +84,45 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ maxEntries = 50 }) => 
             The crypt is silent... awaiting disturbances...
           </div>
         ) : (
-          entries.map((entry) => (
-            <div
-              key={entry.id}
-              className="bg-panel-bg border border-terminal-green border-opacity-50 p-2 hover:border-opacity-100 transition-all"
-            >
-              <div className="flex items-start gap-2">
-                <span className="text-base flex-shrink-0">
-                  {getEventIcon(entry.type)}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-blood-red text-xs font-bold">
-                      {getEventLabel(entry.type)}
-                    </span>
-                    <span className="text-terminal-green text-xs">
-                      {formatTimestamp(entry.timestamp)}
-                    </span>
-                  </div>
-                  <div className="text-terminal-green text-xs break-all">
-                    {getDisplayPath(entry.path)}
+          <>
+            {/* Collapsed historical commits summary */}
+            {historicalEntries.length > 0 && (
+              <div className="text-terminal-green text-xs text-center py-3 px-2 border border-terminal-green border-opacity-30 bg-panel-bg mb-2">
+                <div className="opacity-50">═══════════════════════════════</div>
+                <div className="py-1">
+                  <span className="text-blood-red">📚</span> {historicalEntries.length} older commit{historicalEntries.length !== 1 ? 's' : ''} from history
+                </div>
+                <div className="opacity-50">═══════════════════════════════</div>
+              </div>
+            )}
+
+            {/* Display entries in reverse (newest first) */}
+            {displayEntries.map((entry) => (
+              <div
+                key={entry.id}
+                className="bg-panel-bg border border-terminal-green border-opacity-50 p-2 hover:border-opacity-100 transition-all"
+              >
+                <div className="flex items-start gap-2">
+                  <span className="text-base flex-shrink-0">
+                    {getEventIcon(entry.type)}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-blood-red text-xs font-bold">
+                        {getEventLabel(entry.type)}
+                      </span>
+                      <span className="text-terminal-green text-xs">
+                        {formatTimestamp(entry.timestamp)}
+                      </span>
+                    </div>
+                    <div className="text-terminal-green text-xs break-all">
+                      {getDisplayPath(entry.path)}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))
+            ))}
+          </>
         )}
       </div>
 

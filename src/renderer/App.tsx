@@ -69,27 +69,34 @@ function App() {
     });
 
     // Binding the save data loader from the crypt
-    window.electronAPI.onSaveLoaded((data) => {
+    window.electronAPI.onSaveLoaded(async (data) => {
       console.log('🦇 Loading pet soul from the crypt...');
       loadFromSave(data);
 
-      // Load activity log from save
-      if (data.activityLog && Array.isArray(data.activityLog)) {
-        const clearEntries = useActivityLogStore.getState().clearEntries;
-        const addEntryDirect = useActivityLogStore.getState().addEntry;
+      // Activity log is NOT persisted across sessions - each session starts fresh
+      const clearEntries = useActivityLogStore.getState().clearEntries;
+      clearEntries();
 
-        // Clear existing entries
-        clearEntries();
+      // Load ALL git history as collapsed historical commits (shows all previous work)
+      const watchedPath = data.watchedProjectPath;
+      if (watchedPath) {
+        try {
+          const history = await window.electronAPI.getGitHistory(watchedPath);
 
-        // Restore saved entries
-        data.activityLog.forEach((entry: any) => {
-          addEntryDirect({
-            type: entry.type,
-            path: entry.path,
-            timestamp: entry.timestamp
-          });
-        });
-        console.log(`🦇 Restored ${data.activityLog.length} activity log entries`);
+          if (history && history.length > 0) {
+            const addHistoricalEntries = useActivityLogStore.getState().addHistoricalEntries;
+            addHistoricalEntries(
+              history.map(c => ({
+                type: 'commit' as const,
+                path: c.message,
+                timestamp: c.timestamp
+              }))
+            );
+            console.log(`🦇 Loaded ${history.length} historical commits from git history`);
+          }
+        } catch (error) {
+          console.error('🦇 Failed to load git history:', error);
+        }
       }
 
       // Calculate and apply time decay

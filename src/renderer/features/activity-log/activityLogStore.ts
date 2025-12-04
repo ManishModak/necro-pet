@@ -11,6 +11,7 @@ export interface ActivityLogEntry {
 export interface ActivityLogState {
   entries: ActivityLogEntry[];
   addEntry: (event: Omit<ActivityLogEntry, 'id'>) => void;
+  addHistoricalEntries: (events: Array<Omit<ActivityLogEntry, 'id'>>) => void;
   clearEntries: () => void;
 }
 
@@ -38,6 +39,18 @@ export const useActivityLogStore = create<ActivityLogState>((set) => ({
     }
 
     return { entries: updatedEntries };
+  }),
+
+  // Loading historical commits from git history (prepended, marked with HISTORY: prefix)
+  addHistoricalEntries: (events) => set((state) => {
+    const historicalEntries: ActivityLogEntry[] = events.map(event => ({
+      ...event,
+      id: generateId(),
+      path: event.path.startsWith('HISTORY:') ? event.path : `HISTORY: ${event.path}`,
+    }));
+
+    // Prepend historical entries (they're older, so they go to the beginning)
+    return { entries: [...historicalEntries, ...state.entries] };
   }),
 
   // Exorcising all spirits from the log
