@@ -10,6 +10,27 @@ A haunted desktop virtual pet that feeds on your Git activity. Built for the **K
 
 ---
 
+## 🎥 Live Demo
+
+### Quick GIF Preview
+
+![Necro-Pet Demo](assets/demo-optimized.gif)
+
+*Quick 30-second preview showing the pet evolution and weather integration*
+
+### Full Video Demo
+
+🎬 **[Watch Full Demo on YouTube](YOUR_YOUTUBE_URL_HERE)** | 🎥 **[Watch Full Demo on Loom](YOUR_LOOM_URL_HERE)**
+
+*Full 3-minute demonstration video showing:*
+
+- Complete pet evolution cycle (Egg → Larva → Beast → Ghost)
+- Crypt Keeper hook in action with git commits
+- Real-time weather integration via MCP
+- All UI features and interactions
+
+---
+
 ## 🦇 What is Necro-Pet?
 
 Necro-Pet is a **desktop virtual pet** that gamifies your coding workflow:
@@ -19,6 +40,15 @@ Necro-Pet is a **desktop virtual pet** that gamifies your coding workflow:
 - **Neglect it too long** → It dies and becomes a ghost 👻
 
 The pet evolves through stages: **Egg → Larva → Beast → Ghost (death)**
+
+### 🎮 Pet Evolution Stages
+
+| Stage | Visual | Description |
+|-------|--------|-------------|
+| **Egg** | ![Egg Stage](assets/egg.gif) | The beginning of life - your pet awaits your first commit |
+| **Larva** | ![Larva Stage](assets/larva.gif) | Growing stronger with each file save |
+| **Beast** | ![Beast Stage](assets/beast.gif) | Fully grown and thriving on your code |
+| **Ghost** | ![Ghost Stage](assets/ghost.gif) | The final form when neglected too long |
 
 ### Features
 
@@ -116,8 +146,9 @@ Kiro's "Vibe Coding" capability helped us nail the 8-bit aesthetic without getti
 
 ## 🎥 Demo Video
 
-[Link to Demo Video](YOUR_VIDEO_URL_HERE)
-*(Video must be < 3 minutes and show the pet evolving, the Crypt Keeper hook, and weather integration)*
+[Watch the Necro-Pet in Action](YOUR_VIDEO_URL_HERE)
+
+*Video must be < 3 minutes and show the pet evolving, the Crypt Keeper hook, and weather integration*
 
 ---
 
@@ -196,9 +227,16 @@ The "Haunted Windows 95" aesthetic was achieved through:
 
 ---
 
-## 🎥 Demo Video
+## 🌦️ Weather Integration Showcase
 
-[Watch the Necro-Pet in Action](YOUR_VIDEO_URL_HERE)
+Necro-Pet reacts to real-world weather conditions:
+
+| Weather Type | Day Visual | Night Visual |
+|--------------|------------|--------------|
+| **Clear** | ![Clear Day](assets/clear-day.gif) | ![Clear Night](assets/clear-night.gif) |
+| **Rain** | ![Rain Day](assets/rain-day.gif) | ![Rain Night](assets/rain-night.gif) |
+| **Snow** | ![Snow Day](assets/snow-day.gif) | ![Snow Night](assets/snow-night.gif) |
+| **Storm** | ![Storm Day](assets/storm-day.gif) | ![Storm Night](assets/storm-night.gif) |
 
 ---
 
