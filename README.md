@@ -20,7 +20,7 @@ A haunted desktop virtual pet that feeds on your Git activity. Built for the **K
 
 ### Full Demonstration
 
-🎬 **[Watch Full Demo on YouTube](YOUR_YOUTUBE_URL_HERE)** | 🎥 **[Watch Full Demo on Loom](YOUR_LOOM_URL_HERE)**
+🎬 **[Watch Full Demo on YouTube](https://youtu.be/VSRB3CIGBws)**
 
 *Complete 3-minute video showcasing all features*
 
@@ -188,8 +188,8 @@ Necro-Pet demonstrates **all five Kiro capabilities** working together:
   - Color palette limited to 8-bit green/black/red
   - Error messages framed as "curses" or "spirit disturbances"
 - `.kiro/steering/pet_logic.md`: Balanced game mechanics
-  - Health decay formula: `health -= 0.1% per minute of inactivity`
-  - Feed formula: `health += 5% per file save, max +20% per hour`
+  - Health decay formula: `health -= linear decay over 48h`
+  - Feed formula: `health += 20 per commit`
 
 #### 4. MCP (Model Context Protocol) 🌐 *(The Real-World Connection)*
 
