@@ -198,10 +198,11 @@ Necro-Pet demonstrates **all five Kiro capabilities** working together:
 - Custom **Open-Meteo MCP Server** (`mcp-servers/open-meteo-server.py`)
   - Fetches real-time weather data via Open-Meteo API
   - Exposes weather conditions to Kiro context
+  - **Dev Workflow:** Kiro inspected the live API data via MCP to generate TypeScript interfaces instantly—no documentation reading required.
   - Pet environment reacts to actual weather:
-    - Rain → Pixel rain animation + "dripping" sound effects
-    - Snow → White overlay + "cold" health modifier (-0.5%/hour)
-    - Storm → Lightning flashes + "frightened" pet behavior
+    - Rain → Pixel rain animation
+    - Snow → White overlay
+    - Storm → Lightning flashes
 
 **Technical Implementation:**
 
